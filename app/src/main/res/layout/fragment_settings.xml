@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:id="@+id/LinearLayout01"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+        <Spinner
+            android:id="@+id/profile_add_lang1"
+            android:layout_height="wrap_content"
+            android:entries="@array/languages_list"
+            android:prompt="@string/profile_add_lang1"
+            android:layout_width="match_parent"></Spinner>
+        <Spinner
+            android:id="@+id/profile_add_lang2"
+            android:layout_height="wrap_content"
+            android:entries="@array/languages_list"
+            android:prompt="@string/profile_add_lang2"
+            android:layout_width="match_parent"></Spinner>
+        <Spinner
+            android:id="@+id/profile_add_lang3"
+            android:layout_height="wrap_content"
+            android:entries="@array/languages_list"
+            android:prompt="@string/profile_add_lang3"
+            android:layout_width="match_parent"></Spinner>
+        <CheckBox
+            android:id="@+id/profile_check"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_check_event"
+            android:layout_width="fill_parent"></CheckBox>
+        <Button
+            android:id="@+id/profile_button_submit"
+            android:layout_height="wrap_content"
+            android:text="@string/profile_submit_button"
+            android:onClick="sendFeedback"
+            android:layout_width="fill_parent"></Button>
+
+    </LinearLayout>
+</ScrollView>
