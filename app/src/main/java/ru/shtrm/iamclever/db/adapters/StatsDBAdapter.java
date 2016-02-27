@@ -36,8 +36,7 @@ public class StatsDBAdapter extends BaseDBAdapter {
 
 	/**
 	 * 
-	 * @param profile
-	 * @return
+	 * @param profile - профиль
 	 */
 	public Stats getStatsByProfileAndLang(int profile,int lang) {
 		Cursor cursor;
@@ -70,7 +69,7 @@ public class StatsDBAdapter extends BaseDBAdapter {
      * @return list
      */
     public ArrayList<Stats> getAllItems() {
-        ArrayList<Stats> arrayList = new ArrayList<Stats>();
+        ArrayList<Stats> arrayList = new ArrayList<>();
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
         if (cursor.getCount() > 0) {
@@ -113,21 +112,19 @@ public class StatsDBAdapter extends BaseDBAdapter {
 
     /**
 	 * <p>Добавляет запись в таблице users</p>
-	 * @param stat
+	 * @param stat - статистика пользователя
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replaceItem(Stats stat) {
-		long id  = replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right());
-		return id;
+		return replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right());
 	}
     /**
      * <p>Иизменяет запись в таблице users</p>
-     * @param stat
+     * @param stat - статистика пользователя
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Stats stat) {
-        long id  = replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right());
-        return id;
+        return replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right());
     }
 
 }

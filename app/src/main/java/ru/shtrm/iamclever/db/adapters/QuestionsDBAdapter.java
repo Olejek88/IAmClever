@@ -48,7 +48,6 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 	/**
 	 * 
 	 * @param id
-	 * @return
 	 */
 	public Questions getQuestionById(int id) {
 		Cursor cursor;
@@ -81,7 +80,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
      * @return list
      */
     public ArrayList<Questions> getAllItems() {
-        ArrayList<Questions> arrayList = new ArrayList<Questions>();
+        ArrayList<Questions> arrayList = new ArrayList<>();
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
         if (cursor.getCount() > 0) {
@@ -106,7 +105,8 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 		ContentValues values = new ContentValues();
 		values.put(FIELD_LANG_NAME, lang);
         values.put(FIELD_TYPE_NAME, type);
-		values.put(FIELD_LEVEL_NAME, levelA);
+		values.put(FIELD_LEVEL_NAME, level);
+        values.put(FIELD_LEVELA_NAME, levelA);
 		values.put(FIELD_QUESTION_NAME, question);
 		values.put(FIELD_ORIGINAL_NAME, original);
         values.put(FIELD_ANSWER_NAME, answer);
@@ -116,21 +116,19 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 
     /**
 	 * <p>Добавляет запись в таблице users</p>
-	 * @param question
+	 * @param question - вопрос
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replaceItem(Questions question) {
-		long id  = replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer());
-		return id;
+		return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer());
 	}
     /**
      * <p>Иизменяет запись в таблице users</p>
-     * @param question
+     * @param question - вопрос
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Questions question) {
-        long id  = replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer());
-        return id;
+        return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer());
     }
 
 }

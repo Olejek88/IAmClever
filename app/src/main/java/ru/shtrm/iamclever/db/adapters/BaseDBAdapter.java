@@ -67,9 +67,8 @@ public class BaseDBAdapter {
 	/**
 	 * Возвращает имя поля в формате table.fieldname
 	 * 
-	 * @param table
-	 * @param field
-	 * @return
+	 * @param table - таблица
+	 * @param field - поле
 	 */
 	public static String getFullName(String table, String field) {
 		return new StringBuilder().append(table).append('.').append(field)
@@ -79,9 +78,8 @@ public class BaseDBAdapter {
 	/**
 	 * Заполняет общие поля для всех объектов таблиц
 	 * 
-	 * @param cursor
-	 * @param item
-	 * @return
+	 * @param cursor - курсор
+	 * @param item -
 	 */
 	protected BaseTable getItem(Cursor cursor, BaseTable item) {
 		item.set_id(cursor.getLong(cursor.getColumnIndex(FIELD_ID)));
@@ -89,8 +87,7 @@ public class BaseDBAdapter {
 	}
 
 	protected ContentValues putCommonFields(BaseTable item) {
-		ContentValues values = new ContentValues();
-		return values;
+		return new ContentValues();
 	}
 
 }

@@ -20,7 +20,7 @@ public class QuestionTypeDBAdapter extends BaseDBAdapter {
 		public static final String TITLE = TABLE_NAME + '_' + FIELD_NAME;
 	}
 
-	private static final Map<String, String> mProjection = new HashMap<String, String>();
+	private static final Map<String, String> mProjection = new HashMap<>();
 	static {
 		mProjection.put(Projection.ID, getFullName(TABLE_NAME, FIELD_ID)
 				+ " AS " + Projection.ID);
@@ -70,7 +70,7 @@ public class QuestionTypeDBAdapter extends BaseDBAdapter {
 	 * @return list
 	 */
 	public ArrayList<Languages> getAllItems() {
-		ArrayList<Languages> arrayList = new ArrayList<Languages>();
+		ArrayList<Languages> arrayList = new ArrayList<>();
 		Cursor cursor;
 		cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
 		if (cursor.getCount() > 0) {
@@ -90,7 +90,7 @@ public class QuestionTypeDBAdapter extends BaseDBAdapter {
      * @return list
      */
     public ArrayList<String> getItems() {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
         if (cursor.moveToFirst()) {
@@ -114,7 +114,7 @@ public class QuestionTypeDBAdapter extends BaseDBAdapter {
 	 * Добавляет/изменяет запись
 	 * </p>
 	 * 
-	 * @param item
+	 * @param item - структура языка
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replace(Languages item) {

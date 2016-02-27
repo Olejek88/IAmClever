@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:text="@string/new_words"
         android:gravity="center_vertical"
-        android:layout_toRightOf="@id/lang_icon"
+        android:layout_toRightOf="@+id/lang_icon"
         android:textColor="@color/text_color"
         android:textAppearance="?android:attr/textAppearanceSmall" />
     <ImageView

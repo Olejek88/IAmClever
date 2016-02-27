@@ -37,7 +37,6 @@ public class AnswersDBAdapter extends BaseDBAdapter {
         values.put(FIELD_CORRECT_NAME, answer.getCorrect());
         values.put(FIELD_INCORRECT_NAME, answer.getIncorrect());
         mDb.replace(TABLE_NAME,null,values);
-        return;
     }
 
     public Answers getBadAnswerByLevelAndProfile(int level, int profile) {
@@ -60,8 +59,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
 
     /**
      *
-     * @param id
-     * @return
+     * @param id - идентификатор
      */
     public Answers getAnswerById(int id) {
         Cursor cursor;
@@ -75,8 +73,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
 
     /**
      *
-     * @param id
-     * @return
+     * @param id - идентификатор
      */
     public Answers getAnswerByQuestion(int id) {
         Cursor cursor;
@@ -105,7 +102,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
      * @return list
      */
     public ArrayList<Answers> getAllItems() {
-        ArrayList<Answers> arrayList = new ArrayList<Answers>();
+        ArrayList<Answers> arrayList = new ArrayList<>();
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
         if (cursor.getCount() > 0) {
@@ -139,21 +136,19 @@ public class AnswersDBAdapter extends BaseDBAdapter {
 
     /**
      * <p>Добавляет запись в таблице users</p>
-     * @param answer
+     * @param answer - ответ
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long replaceItem(Answers answer) {
-        long id  = replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect());
-        return id;
+        return replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect());
     }
     /**
      * <p>Иизменяет запись в таблице users</p>
-     * @param answer
+     * @param answer - ответ
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Answers answer) {
-        long id  = replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect());
-        return id;
+        return replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect());
     }
 
 }
