@@ -62,6 +62,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 
     public Questions getItem(Cursor cursor) {
         Questions item = new Questions();
+        item.setId(cursor.getInt(cursor.getColumnIndex(FIELD_ID_NAME)));
 		item.setLang(cursor.getInt(cursor.getColumnIndex(FIELD_LANG_NAME)));
         item.setType(cursor.getInt(cursor.getColumnIndex(FIELD_TYPE_NAME)));
 		item.setLevel(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL_NAME)));

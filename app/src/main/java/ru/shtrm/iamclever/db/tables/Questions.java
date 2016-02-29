@@ -1,6 +1,7 @@
 package ru.shtrm.iamclever.db.tables;
 
 public class Questions extends BaseTable {
+
     private int id;
     private int lang;
     private int type;

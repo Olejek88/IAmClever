@@ -12,6 +12,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Random;
+
 import ru.shtrm.iamclever.IDatabaseContext;
 import ru.shtrm.iamclever.R;
 import ru.shtrm.iamclever.db.adapters.AnswersDBAdapter;
@@ -29,9 +31,10 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     private int cnt=0;
     private RadioGroup rg;
     private RadioButton rb_text1,rb_text2,rb_text3,rb_text4,rb_text5;
-    private Questions question;
+    private Questions question, question2;
     private Answers answer;
     private Stats stats;
+    private String RightAnswer;
 
     public FragmentQuestion() {
         // Required empty public constructor
@@ -76,19 +79,28 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
             question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
             stats = statsDBAdapter.getStatsByProfileAndLang(user.getId(),user.getLang1());
             if (question != null) {
+                RightAnswer = question.getAnswer();
                 answer = answersDBAdapter.getAnswerByQuestionAndProfile(question.getId(),user.getId());
                 // TODO обновить статистику пользователя
                 question_text.setText(questionTypeDBAdapter.getNameByID(""+question.getType()) + ": " + question.getOriginal());
-                question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-                if (question != null) rb_text1.setText(question.getAnswer());
-                question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-                if (question != null) rb_text2.setText(question.getAnswer());
-                question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-                if (question != null) rb_text3.setText(question.getAnswer());
-                question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-                if (question != null) rb_text4.setText(question.getAnswer());
-                question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-                if (question != null) rb_text5.setText(question.getAnswer());
+                Random r = new Random();
+                int i1 = r.nextInt(MAX_QUESTIONS)+1;
+
+                question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
+                if (i1!=1 && question2 != null) rb_text1.setText(question2.getAnswer());
+                if (i1==1) rb_text1.setText(RightAnswer);
+                question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
+                if (i1!=2 && question2 != null) rb_text2.setText(question2.getAnswer());
+                if (i1==2) rb_text2.setText(RightAnswer);
+                question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
+                if (i1!=3 && question2 != null) rb_text3.setText(question2.getAnswer());
+                if (i1==3) rb_text3.setText(RightAnswer);
+                question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
+                if (i1!=4 && question2 != null) rb_text4.setText(question2.getAnswer());
+                if (i1==4) rb_text4.setText(RightAnswer);
+                question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
+                if (i1!=5 && question2 != null) rb_text5.setText(question2.getAnswer());
+                if (i1==5) rb_text5.setText(RightAnswer);
             }
             else {
                 Fragment f = FragmentWelcome.newInstance("Welcome");
@@ -114,16 +126,19 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 if (rb_text4.isChecked() && rb_text4.getText().equals(question.getAnswer())) right=true;
                 if (rb_text5.isChecked() && rb_text5.getText().equals(question.getAnswer())) right=true;
                 if (right) {
-                    answer.setCorrect(answer.getCorrect() + 1);
+                    if (answer != null)
+                        answer.setCorrect(answer.getCorrect() + 1);
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Правильно!", Toast.LENGTH_LONG).show();
                 }
                 else {
-                    answer.setIncorrect(answer.getIncorrect() + 1);
+                    if (answer != null)
+                        answer.setIncorrect(answer.getIncorrect() + 1);
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Неправильно (((", Toast.LENGTH_LONG).show();
                 }
-                answersDBAdapter.replace(answer);
+                if (answer != null)
+                    answersDBAdapter.replace(answer);
 
                 Fragment f = FragmentWelcome.newInstance("Welcome");
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();

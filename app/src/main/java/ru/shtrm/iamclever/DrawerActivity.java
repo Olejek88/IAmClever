@@ -1,12 +1,13 @@
 package ru.shtrm.iamclever;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -53,11 +54,13 @@ public class DrawerActivity extends AppCompatActivity {
     private static final int PROFILE_SETTING = 2;
     private static final int MAX_USER_PROFILE = 10;
 
+    protected static boolean isVisible = false;
     private boolean isLogged = false;
     private boolean isActive = false;
     private int ActiveUserID;
     private Timer tShow = new Timer();
     private Timer tQuest = new Timer();
+    private Handler handler = new Handler ();
 
     //save our header or result
     public AccountHeader headerResult = null;
@@ -72,6 +75,7 @@ public class DrawerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_dark_toolbar);
+
         profile = new ArrayList<IProfile>();
         users_id = new int[MAX_USER_PROFILE];
 
@@ -203,35 +207,64 @@ public class DrawerActivity extends AppCompatActivity {
 
         tShow.schedule(new TimerTask(){
             @Override
-            public void run(){
+            public void run() {
                 if (isActive) {
-                    Fragment f = FragmentNewWords.newInstance("Lesson");
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                    if (!isVisible) {
+                        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
+                        for (int i = 0; i < tasklist.size(); i++) {
+                            ActivityManager.RunningTaskInfo taskinfo = tasklist.get(i);
+                            if (taskinfo.topActivity.getPackageName().equals("ru.shtrm.iamclever"))
+                                am.moveTaskToFront(taskinfo.id, 0);
+                        }
+                    }
+
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            RunShow(0);
+                        }
+                    }, 2000);
                 }
             }
-        },10,150*1000);
+        },1000,150*1000);
 
         tQuest.schedule(new TimerTask(){
             @Override
             public void run(){
                 if (isActive) {
-                    //startQuestionDialog();
+                if (!isVisible) {
+                    ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
+                    for (int i = 0; i < tasklist.size(); i++) {
+                        ActivityManager.RunningTaskInfo taskinfo = tasklist.get(i);
+                        if (taskinfo.topActivity.getPackageName().equals("ru.shtrm.iamclever"))
+                            am.moveTaskToFront(taskinfo.id, 0);
+                    }
+                }
+                handler.postDelayed (new Runnable (){
+                    public void run (){
+                        RunShow(1);
+                    }
+                },2000);
                 }
             }
-        },10,150*1000);
-
+        },10,15*1000);
+        isVisible = true;
     }
 
-    public void startQuestionDialog(){
-        this.runOnUiThread(startDialogFunction);
-    }
-    private Runnable startDialogFunction = new Runnable() {
-        @Override
-        public void run() {
-            Message msg = new Message();
-            handler.sendMessage(msg);
+    private void RunShow (int type) {
+        if (isActive) {
+            if (type==0) {
+                Fragment f = FragmentNewWords.newInstance("Lesson");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            }
+            else {
+                Fragment f = FragmentQuestion.newInstance("Question");
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            }
         }
-    };
+    }
+
     private OnCheckedChangeListener onCheckedChangeListener = new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
@@ -273,7 +306,11 @@ public class DrawerActivity extends AppCompatActivity {
         if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
         } else {
-            moveTaskToBack(true);
+            //moveTaskToBack(true);
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
             //super.onBackPressed();
         }
     }
@@ -349,14 +386,18 @@ public class DrawerActivity extends AppCompatActivity {
         return success;
     }
 
-    protected Handler handler = new Handler(){
-        public void handleMessage(Message m){
-            //Intent intent = new Intent (DrawerActivity.this, DrawerActivity.class);
-            //startActivity(intent);
-            //intent = new Intent (DrawerActivity.this, QuestionDialog.class);
-            //startActivity(intent);
-            Fragment f = FragmentQuestion.newInstance("Question");
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-        }
-    };
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        isVisible=true;
+    }
+
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        isVisible=false;
+    }
 }
