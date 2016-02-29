@@ -30,6 +30,8 @@ public class FragmentWelcome extends Fragment {
         TextView question_text = (TextView)view.findViewById(R.id.text2);
         if (gTitle.equalsIgnoreCase("NoLangSelected"))
             question_text.setText(R.string.no_lang_selected);
+        if (gTitle.equalsIgnoreCase("NextLesson"))
+            question_text.setText(R.string.next_lesson);
         return view;
     }
 }

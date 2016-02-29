@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import java.io.File;
 
@@ -32,6 +33,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     private Questions question;
     private Stats stats;
     private ImageView iView;
+    private TextView tView;
     private Button mNewWordsSubmit;
 
     private StatsDBAdapter statsDBAdapter;
@@ -50,7 +52,8 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_new_words, container, false);
         File sd_card = Environment.getExternalStorageDirectory();
-        iView = (ImageView) view.findViewById(R.id.profile_add_image);
+        iView = (ImageView) view.findViewById(R.id.lang_image);
+        tView = (TextView) view.findViewById(R.id.new_words_text_hello);
 
         new_word1 = (CheckBox)view.findViewById(R.id.new_word1);
         new_word1.setOnClickListener(this);
@@ -83,6 +86,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 iView.setImageBitmap(myBitmap);
             }
+            tView.setText(getString(R.string.new_words_hello)+ " Язык: " + languagesDBAdapter.getNameByID(""+user.getLang1()));
 
             question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
             if (question != null) new_word1.setText(question.getOriginal() + " - " + question.getAnswer());
@@ -114,8 +118,8 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                 else
                     mNewWordsSubmit.setEnabled(false);
                 break;
-            case R.id.Question_Answer: {
-                Fragment f = FragmentWelcome.newInstance("Следующий урок через 30 минут");
+            case R.id.CheckNewWords: {
+                Fragment f = FragmentWelcome.newInstance(getString(R.string.next_lesson));
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 break;
             }
