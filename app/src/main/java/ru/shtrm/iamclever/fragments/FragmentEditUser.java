@@ -44,7 +44,7 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
 
     public static FragmentEditUser newInstance(String title) {
         FragmentEditUser f = new FragmentEditUser();
-        Bundle args = new Bundle();
+        //Bundle args = new Bundle();
         return (f);
     }
 
@@ -66,10 +66,10 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
                 new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
         if (user!=null) {
-            pass.setText(user.getPass().toString());
-            login.setText(user.getLogin().toString());
-            name.setText(user.getName().toString());
-            image_name = user.getImage().toString();
+            pass.setText(user.getPass());
+            login.setText(user.getLogin());
+            name.setText(user.getName());
+            image_name = user.getImage();
 
             File sdcard = Environment.getExternalStorageDirectory();
             String targetfilename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + user.getImage();
@@ -141,7 +141,7 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.profile_button_delete:
-                user_id = (int) users.getActiveUser().getId();
+                user_id = users.getActiveUser().getId();
                 stats.deleteAllItem(user_id);
                 users.deleteItem(login.getText().toString());
                 ((DrawerActivity)getActivity()).deleteProfile(user_id);

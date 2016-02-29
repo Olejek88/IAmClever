@@ -13,6 +13,7 @@
             android:id="@+id/question_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:text=""
             android:textColor="@color/text_color"
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -21,30 +22,35 @@
             android:id="@+id/answer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:textColor="@color/text_color"
             android:text="Answer1" />
         <RadioButton
             android:id="@+id/answer2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:textColor="@color/text_color"
             android:text="Answer2" />
         <RadioButton
             android:id="@+id/answer3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:textColor="@color/text_color"
             android:text="Answer3" />
         <RadioButton
             android:id="@+id/answer4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:textColor="@color/text_color"
             android:text="Answer4" />
         <RadioButton
             android:id="@+id/answer5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textSize="14sp"
             android:textColor="@color/text_color"
             android:text="Answer5" />
     </RadioGroup>
