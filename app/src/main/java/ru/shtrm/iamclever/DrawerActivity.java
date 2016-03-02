@@ -66,7 +66,7 @@ public class DrawerActivity extends AppCompatActivity {
     public AccountHeader headerResult = null;
     private Drawer result = null;
     private boolean opened = false;
-    private ArrayList<IProfile> profile;
+    private ArrayList<IProfile> iprofilelist;
     private List<Profiles> profilesList;
     private int cnt = 0;
     private int users_id[];
@@ -76,7 +76,7 @@ public class DrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_dark_toolbar);
 
-        profile = new ArrayList<IProfile>();
+        iprofilelist = new ArrayList<IProfile>();
         users_id = new int[MAX_USER_PROFILE];
 
         if (!initDB()) finish();
@@ -98,13 +98,22 @@ public class DrawerActivity extends AppCompatActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        if (profile instanceof IDrawerItem && ((IDrawerItem) profile).getIdentifier() == PROFILE_ADD) {
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_ADD) {
                             Fragment f = FragmentAddUser.newInstance("AddProfile");
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                         }
-                        if (profile instanceof IDrawerItem && ((IDrawerItem) profile).getIdentifier() == PROFILE_SETTING) {
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING) {
                             Fragment f = FragmentEditUser.newInstance("EditProfile");
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                        }
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() > PROFILE_SETTING) {
+                            int profileId = profile.getIdentifier()-3;
+                            String tmp = profilesList.get(profileId).getLogin();
+                            ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
+                                    new IDatabaseContext(getApplicationContext()));
+                            headerResult.setActiveProfile(iprofilelist.get(profileId));
+                            profileDBAdapter.setActiveUser(profilesList.get(profileId).getLogin());
+                            profilesList.get(profileId).setUserActive(1);
                         }
                         //false if you have not consumed the event and it should close the drawer
                         return false;
@@ -187,10 +196,10 @@ public class DrawerActivity extends AppCompatActivity {
             result.setSelection(21, false);
 
             //set the active profile
-            if (profile.size()>0)   {
-                for (cnt=0;cnt<profile.size();cnt++) {
-                        if (ActiveUserID>0 && profile.get(cnt).getIdentifier()==ActiveUserID)
-                            headerResult.setActiveProfile(profile.get(cnt));
+            if (iprofilelist.size()>0)   {
+                for (cnt=0;cnt< iprofilelist.size();cnt++) {
+                        if (ActiveUserID>0 && iprofilelist.get(cnt).getIdentifier()==ActiveUserID+2)
+                            headerResult.setActiveProfile(iprofilelist.get(cnt));
                 }
             }
         }
@@ -268,11 +277,19 @@ public class DrawerActivity extends AppCompatActivity {
     private OnCheckedChangeListener onCheckedChangeListener = new OnCheckedChangeListener() {
         @Override
         public void onCheckedChanged(IDrawerItem drawerItem, CompoundButton buttonView, boolean isChecked) {
+            ProfilesDBAdapter users = new ProfilesDBAdapter(
+                    new IDatabaseContext(getApplicationContext()));
+            Profiles user = users.getActiveUser();
             if (drawerItem.getIdentifier() == 12) {
-                if (isChecked)
+                if (isChecked) {
                     isActive = true;
+                    user.setUserActive(1);
+                    users.updateItem(user);
+                }
                 else
                     isActive = false;
+                    user.setUserActive(0);
+                    users.updateItem(user);
             }
         }
     };
@@ -283,9 +300,9 @@ public class DrawerActivity extends AppCompatActivity {
             ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
                     new IDatabaseContext(getApplicationContext()));
             if (i>2) {
-                headerResult.setActiveProfile(profile.get(i - 3));
-                profileDBAdapter.setActiveUser(profilesList.get(i - 3).getLogin());
-                profilesList.get(i - 3).setActive(1);
+                //headerResult.setActiveProfile(iprofilelist.get(i - 3));
+                //profileDBAdapter.setActiveUser(profilesList.get(i - 3).getLogin());
+                //profilesList.get(i - 3).setUserActive(1);
             }
             return false;
         }
@@ -322,11 +339,12 @@ public class DrawerActivity extends AppCompatActivity {
             File imgFile = new  File(target_filename);
             if(imgFile.exists()){
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(myBitmap).withIdentifier((int)item.getId()).withOnDrawerItemClickListener(onDrawerItemClickListener);
+                // first two elements reserved
+                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(myBitmap).withIdentifier((int)item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
             }
             else
-                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.olejek).withIdentifier((int)item.getId()).withOnDrawerItemClickListener(onDrawerItemClickListener);
-            profile.add(new_profile);
+                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.olejek).withIdentifier((int)item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
+            iprofilelist.add(new_profile);
             headerResult.addProfile(new_profile, headerResult.getProfiles().size());
         }
 
@@ -343,9 +361,9 @@ public class DrawerActivity extends AppCompatActivity {
     }
 
     public void deleteProfile (int id)    {
-        for (cnt=0;cnt<profile.size();cnt++) {
+        for (cnt=0;cnt< iprofilelist.size();cnt++) {
             if (users_id[cnt]==id) {
-                profile.remove(cnt);
+                iprofilelist.remove(cnt);
                 headerResult.removeProfile(cnt);
             }
         }

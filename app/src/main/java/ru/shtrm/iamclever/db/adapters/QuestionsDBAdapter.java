@@ -47,7 +47,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 
 	/**
 	 * 
-	 * @param id
+	 * @param id - идентификатор
 	 */
 	public Questions getQuestionById(int id) {
 		Cursor cursor;
@@ -78,7 +78,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
      * Возвращает все записи из таблицы
      * </p>
      *
-     * @return list
+     * @return list - возвращает все вопросы
      */
     public ArrayList<Questions> getAllItems() {
         ArrayList<Questions> arrayList = new ArrayList<>();

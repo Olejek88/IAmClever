@@ -32,4 +32,19 @@
     <string name="language_spain">Испанский</string>
     <string name="question_answer">Ответить</string>
     <string name="question_cancel">Отказаться</string>
+    <string name="monday">Понедельник</string>
+    <string name="tuesday">Вторник</string>
+    <string name="wednesday">Среда</string>
+    <string name="thursday">Четверг</string>
+    <string name="friday">Пятница</string>
+    <string name="saturday">Суббота</string>
+    <string name="sunday">Воскресенье</string>
+    <string name="choose_weekday">Выберите дни недели</string>
+    <string name="choose_time">Время учебы/экзаменов</string>
+    <string name="choose_languages">Выберите изучаемые языки</string>
+    <string name="default_time">Время запуска: </string>
+    <string name="profile_change_button">Изменить</string>
+    <string name="begin">Начало:</string>
+    <string name="end">Конец:</string>
+    <string name="period">Период</string>
 </resources>

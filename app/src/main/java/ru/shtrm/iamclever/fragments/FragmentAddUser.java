@@ -149,6 +149,7 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
                 profile.setLang2(lang2Spinner.getSelectedItemPosition());
                 profile.setLang3(lang3Spinner.getSelectedItemPosition());
                 profile.setLastDate((int)(System.currentTimeMillis() / 1000L));
+                profile.setUserActive(1);
                 profile.setActive(1);
                 //long id = users.replaceItem(name.getText().toString(),image_name, login.getText().toString(), pass.getText().toString(),lang1Spinner.getSelectedItemPosition(), lang2Spinner.getSelectedItemPosition(), lang3Spinner.getSelectedItemPosition(), (int)(System.currentTimeMillis() / 1000L), 1, true);
                 long id = users.replaceItem(profile);

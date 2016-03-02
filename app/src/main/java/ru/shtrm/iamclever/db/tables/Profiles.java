@@ -13,7 +13,21 @@ public class Profiles extends BaseTable {
     private int lastdate;
     private int active;
 
-	public Profiles() {
+    private int check_mon;
+    private int check_tue;
+    private int check_wen;
+    private int check_tur;
+    private int check_fri;
+    private int check_sat;
+    private int check_sun;
+
+    private int hour_start;
+    private int hour_end;
+    private int period;
+
+    private int user_active;
+
+    public Profiles() {
 	}
 
     public int  getId() {
@@ -78,5 +92,55 @@ public class Profiles extends BaseTable {
     }
     public void setActive(int active) {
         this.active = active;
+    }
+    public int getUserActive() {
+        return user_active;
+    }
+    public void setUserActive(int active) {
+        this.user_active = active;
+    }
+
+    public int getCheck_weekday(int weekday) {
+        switch (weekday) {
+            case 1: return check_mon;
+            case 2: return check_tue;
+            case 3: return check_wen;
+            case 4: return check_tur;
+            case 5: return check_fri;
+            case 6: return check_sat;
+            case 7: return check_sun;
+        }
+        return 0;
+    }
+    public void setCheck_weekday(int weekday, int status) {
+        switch (weekday) {
+            case 1: this.check_mon = status;
+            case 2: this.check_tue = status;
+            case 3: this.check_wen = status;
+            case 4: this.check_tur = status;
+            case 5: this.check_fri = status;
+            case 6: this.check_sat = status;
+            case 7: this.check_sun = status;
+        }
+    }
+
+    public int getStart() {
+        return hour_start;
+    }
+    public void setStart(int start) {
+        this.hour_start = start;
+    }
+    public int getEnd() {
+        return hour_end;
+    }
+    public void setEnd(int end) {
+        this.hour_end = end;
+    }
+
+    public int getPeriod() {
+        return period;
+    }
+    public void setPeriod(int period) {
+        this.period = period;
     }
 }

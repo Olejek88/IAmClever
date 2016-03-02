@@ -14,8 +14,9 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
 
 	public static final String TABLE_NAME = "languages";
 
+    public static final String FIELD_ID = "id";
     public static final String FIELD_NAME = "name";
-    public static final String FIELD_ICON = "icon";
+    public static final String FIELD_ICON = "Icon";
 
 	public static final class Projection {
 		public static final String ID = FIELD_ID;
@@ -33,6 +34,11 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
                 + " AS " + Projection.ICON);
 	}
 
+    String[] mColumns = {
+            FIELD_ID,
+            FIELD_NAME,
+            FIELD_ICON};
+
 	public LanguagesDBAdapter(Context context) {
 		super(context, TABLE_NAME);
 	}
@@ -41,9 +47,11 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
 		Cursor cursor;
 		cursor = mDb.query(TABLE_NAME, mColumns, FIELD_ID + "=?",
 				new String[] { id }, null, null, null);
-		if (cursor.moveToFirst()) {
-			return cursor;
-		}
+        if (cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                return cursor;
+            }
+        }
 		return null;
 	}
 
@@ -59,12 +67,12 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
 	}
 
     public String getIconByID(int id) {
-        Cursor cur;
-        cur = mDb.query(TABLE_NAME, mColumns, FIELD_ID + "=?",
+        Cursor cursor;
+        cursor = mDb.query(TABLE_NAME, mColumns, FIELD_ID + "=?",
                 new String[] { ""+id }, null, null, null);
-        if (cur.getCount() > 0) {
-            cur.moveToFirst();
-            return cur.getString(2);
+        if (cursor.getCount() > 0) {
+            cursor.moveToFirst();
+            return cursor.getString(2);
         } else
             return "";
     }
@@ -72,9 +80,11 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
     public Cursor getAllItems_cursor() {
 		Cursor cursor;
 		cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
-		if (cursor.moveToFirst()) {
-			return cursor;
-		}
+        if (cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                return cursor;
+            }
+        }
 		return null;
 	}
 
@@ -109,10 +119,12 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
         ArrayList<String> list = new ArrayList<String>();
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
-        if (cursor.moveToFirst()) {
-            do {
-                list.add(getItem(cursor).getName());
-            } while (cursor.moveToNext());
+        if (cursor.getCount() > 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    list.add(getItem(cursor).getName());
+                } while (cursor.moveToNext());
+            }
         }
         return list;
     }
@@ -120,8 +132,9 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
 	public Languages getItem(Cursor cursor) {
 		Languages item = new Languages();
 		getItem(cursor, item);
+        item.setId(cursor.getInt(cursor.getColumnIndex(FIELD_ID)));
 		item.setName(cursor.getString(cursor.getColumnIndex(FIELD_NAME)));
-        item.setName(cursor.getString(cursor.getColumnIndex(FIELD_ICON)));
+        item.setIcon(cursor.getString(cursor.getColumnIndex(FIELD_ICON)));
 		return item;
 	}
 
@@ -136,7 +149,7 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
 	public long replace(Languages item) {
 		long id;
 		ContentValues values = putCommonFields(item);
-
+        values.put(FIELD_ID, item.getId());
 		values.put(FIELD_NAME, item.getName());
         values.put(FIELD_ICON, item.getIcon());
 		id = mDb.replace(TABLE_NAME, null, values);
