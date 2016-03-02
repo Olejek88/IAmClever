@@ -8,6 +8,7 @@
     <string name="new_words">Пожалуйста запомните новые слова и выражения.</string>
     <string name="image_description">Изображение</string>
     <string name="profile_add_name">Имя пользователя</string>
+    <string name="add_word_lang">Выбрать язык</string>
     <string name="profile_add_lang1">Выбрать язык 1</string>
     <string name="profile_add_lang2">Выбрать язык 2</string>
     <string name="profile_add_lang3">Выбрать язык 3</string>
@@ -47,4 +48,13 @@
     <string name="begin">Начало:</string>
     <string name="end">Конец:</string>
     <string name="period">Период</string>
+    <string name="question_type_word">Переведите слово</string>
+    <string name="question_type_expression">Выберите правильный перевод выражения</string>
+    <string name="question_type_letter">Вставьте пропущенную букву</string>
+    <string name="question_type">Тип вопроса</string>
+    <string name="levels">Уровень вопроса</string>
+    <string name="original">Оригинал</string>
+    <string name="answer">Перевод</string>
+    <string name="add_new_word">Добавьте новое слово</string>
+    <string name="question_level">Тип и уровень вопроса</string>
 </resources>

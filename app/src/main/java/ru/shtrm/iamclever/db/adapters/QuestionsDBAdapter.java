@@ -46,7 +46,6 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 	}
 
 	/**
-	 * 
 	 * @param id - идентификатор
 	 */
 	public Questions getQuestionById(int id) {
@@ -59,6 +58,19 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 
 		return null;
 	}
+
+    /**
+     * @param original - оригинальное слово/выражение
+     */
+    public Questions getQuestionByName(String original) {
+        Cursor cursor;
+        cursor = mDb.query(TABLE_NAME, mColumns, FIELD_ORIGINAL_NAME + "=?", new String[]{original}, null, null, null);
+        if (cursor.getCount() > 0)
+        if (cursor.moveToFirst()) {
+            return getItem(cursor);
+        }
+        return null;
+    }
 
     public Questions getItem(Cursor cursor) {
         Questions item = new Questions();

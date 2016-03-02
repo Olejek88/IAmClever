@@ -24,7 +24,7 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
         public static final String ICON = TABLE_NAME + '_' + FIELD_ICON;
 	}
 
-	private static final Map<String, String> mProjection = new HashMap<String, String>();
+	private static final Map<String, String> mProjection = new HashMap<>();
 	static {
 		mProjection.put(Projection.ID, getFullName(TABLE_NAME, FIELD_ID)
 				+ " AS " + Projection.ID);
@@ -96,7 +96,7 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
 	 * @return list
 	 */
 	public ArrayList<Languages> getAllItems() {
-		ArrayList<Languages> arrayList = new ArrayList<Languages>();
+		ArrayList<Languages> arrayList = new ArrayList<>();
 		Cursor cursor;
 		cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
 		if (cursor.getCount() > 0) {
@@ -116,7 +116,7 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
      * @return list
      */
     public ArrayList<String> getItems() {
-        ArrayList<String> list = new ArrayList<String>();
+        ArrayList<String> list = new ArrayList<>();
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, null, null, null, null, null);
         if (cursor.getCount() > 0) {
@@ -143,24 +143,22 @@ public class LanguagesDBAdapter extends BaseDBAdapter {
 	 * Добавляет/изменяет запись
 	 * </p>
 	 * 
-	 * @param item
+	 * @param item - обновляет информацию по языку
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replace(Languages item) {
-		long id;
 		ContentValues values = putCommonFields(item);
         values.put(FIELD_ID, item.getId());
 		values.put(FIELD_NAME, item.getName());
         values.put(FIELD_ICON, item.getIcon());
-		id = mDb.replace(TABLE_NAME, null, values);
-		return id;
+		return mDb.replace(TABLE_NAME, null, values);
 	}
 
 	/**
 	 * @return the mProjection
 	 */
 	public static Map<String, String> getProjection() {
-		Map<String, String> projection = new HashMap<String, String>();
+		Map<String, String> projection = new HashMap<>();
 		projection.putAll(mProjection);
 		projection.remove(Projection.ID);
 		return projection;

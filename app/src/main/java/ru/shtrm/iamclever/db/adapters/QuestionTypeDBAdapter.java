@@ -130,7 +130,7 @@ public class QuestionTypeDBAdapter extends BaseDBAdapter {
 	 * @return the mProjection
 	 */
 	public static Map<String, String> getProjection() {
-		Map<String, String> projection = new HashMap<String, String>();
+		Map<String, String> projection = new HashMap<>();
 		projection.putAll(mProjection);
 		projection.remove(Projection.ID);
 		return projection;

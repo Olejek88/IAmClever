@@ -7,6 +7,19 @@
         <item>@string/language_deutch</item>
         <item>@string/language_spain</item>
     </string-array>
+    <string-array name="questions_type">
+        <item>@string/question_type_word</item>
+        <item>@string/question_type_expression</item>
+        <item>@string/question_type_letter</item>
+    </string-array>
+    <string-array name="levels">
+        <item>A1(начинающий)</item>
+        <item>A2(начальный)</item>
+        <item>B1(пороговый)</item>
+        <item>B2(продвинутый)</item>
+        <item>C1(профессиональный)</item>
+        <item>C2(совершенный)</item>
+    </string-array>
     <string-array name="hours">
         <item>00:00</item>
         <item>01:00</item>

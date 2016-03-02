@@ -43,6 +43,7 @@ import java.util.TimerTask;
 import ru.shtrm.iamclever.db.adapters.ProfilesDBAdapter;
 import ru.shtrm.iamclever.db.tables.Profiles;
 import ru.shtrm.iamclever.fragments.FragmentAddUser;
+import ru.shtrm.iamclever.fragments.FragmentAddWords;
 import ru.shtrm.iamclever.fragments.FragmentEditUser;
 import ru.shtrm.iamclever.fragments.FragmentIntro;
 import ru.shtrm.iamclever.fragments.FragmentNewWords;
@@ -145,7 +146,7 @@ public class DrawerActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName("Настройки").withDescription("Выбор иностранных языков для изучения").withIcon(GoogleMaterial.Icon.gmd_book).withIdentifier(1).withSelectable(false),
                         new PrimaryDrawerItem().withName("Статистика").withDescription("Текущий счет и анализ успехов").withIcon(FontAwesome.Icon.faw_list).withIdentifier(2).withSelectable(false),
                         new PrimaryDrawerItem().withName("Рейтинг").withDescription("Рейтинг среди изучающих").withIcon(FontAwesome.Icon.faw_bar_chart).withIdentifier(3).withSelectable(false),
-                        new PrimaryDrawerItem().withName("Прогресс успеха").withDescription("Динамика изучения языков").withIcon(FontAwesome.Icon.faw_calendar).withIdentifier(4).withSelectable(false),
+                        new PrimaryDrawerItem().withName("Добавить слова").withDescription("Наполнить словарь").withIcon(FontAwesome.Icon.faw_briefcase).withIdentifier(4).withSelectable(false),
                         new PrimaryDrawerItem().withName("Обновить базу вопросов").withDescription("Загрузить с интернет-сервера").withIcon(FontAwesome.Icon.faw_download).withIdentifier(5).withSelectable(false),
                         // TODO вариант добавления новых слов
                         // TODO настройки связи с сервером
@@ -169,7 +170,9 @@ public class DrawerActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == 1) {
                                 Fragment f = FragmentSettings.newInstance("User Settings");
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-                            } else if (drawerItem.getIdentifier() == 2) {
+                            } else if (drawerItem.getIdentifier() == 4) {
+                                Fragment f = FragmentAddWords.newInstance("Add new words");
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                             }
                             else if (drawerItem.getIdentifier() == 14) {
                                 System.exit(0);
@@ -217,7 +220,7 @@ public class DrawerActivity extends AppCompatActivity {
         tShow.schedule(new TimerTask(){
             @Override
             public void run() {
-                if (isActive) {
+                if (isActive && false) {
                     if (!isVisible) {
                         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                         List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
@@ -240,7 +243,7 @@ public class DrawerActivity extends AppCompatActivity {
         tQuest.schedule(new TimerTask(){
             @Override
             public void run(){
-                if (isActive) {
+                if (isActive && false) {
                 if (!isVisible) {
                     ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                     List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
