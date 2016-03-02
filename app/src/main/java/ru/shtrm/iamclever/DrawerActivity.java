@@ -66,7 +66,6 @@ public class DrawerActivity extends AppCompatActivity {
     //save our header or result
     public AccountHeader headerResult = null;
     private Drawer result = null;
-    private boolean opened = false;
     private ArrayList<IProfile> iprofilelist;
     private List<Profiles> profilesList;
     private int cnt = 0;
@@ -77,7 +76,7 @@ public class DrawerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_dark_toolbar);
 
-        iprofilelist = new ArrayList<IProfile>();
+        iprofilelist = new ArrayList<>();
         users_id = new int[MAX_USER_PROFILE];
 
         if (!initDB()) finish();
@@ -109,7 +108,6 @@ public class DrawerActivity extends AppCompatActivity {
                         }
                         if (profile instanceof IDrawerItem && profile.getIdentifier() > PROFILE_SETTING) {
                             int profileId = profile.getIdentifier()-3;
-                            String tmp = profilesList.get(profileId).getLogin();
                             ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
                                     new IDatabaseContext(getApplicationContext()));
                             headerResult.setActiveProfile(iprofilelist.get(profileId));
@@ -129,11 +127,8 @@ public class DrawerActivity extends AppCompatActivity {
                 new IDatabaseContext(getApplicationContext()));
         Profiles user = users.getActiveUser();
         if (user != null) {
-            ActiveUserID = (int)user.getId();
-            if (user.getActive() > 0)
-                isActive = true;
-            else
-                isActive = false;
+            ActiveUserID = user.getId();
+            isActive = user.getActive() > 0;
         }
 
         //Create the drawer
@@ -148,7 +143,6 @@ public class DrawerActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName("Рейтинг").withDescription("Рейтинг среди изучающих").withIcon(FontAwesome.Icon.faw_bar_chart).withIdentifier(3).withSelectable(false),
                         new PrimaryDrawerItem().withName("Добавить слова").withDescription("Наполнить словарь").withIcon(FontAwesome.Icon.faw_briefcase).withIdentifier(4).withSelectable(false),
                         new PrimaryDrawerItem().withName("Обновить базу вопросов").withDescription("Загрузить с интернет-сервера").withIcon(FontAwesome.Icon.faw_download).withIdentifier(5).withSelectable(false),
-                        // TODO вариант добавления новых слов
                         // TODO настройки связи с сервером
                         new DividerDrawerItem(),
                         new SecondarySwitchDrawerItem().withName("On-line профиль").withIcon(Octicons.Icon.oct_tools).withChecked(true).withOnCheckedChangeListener(onCheckedChangeListener).withIdentifier(11),
@@ -223,6 +217,7 @@ public class DrawerActivity extends AppCompatActivity {
                 if (isActive && false) {
                     if (!isVisible) {
                         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        //TODO заменить getRunningTasks
                         List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
                         for (int i = 0; i < tasklist.size(); i++) {
                             ActivityManager.RunningTaskInfo taskinfo = tasklist.get(i);
@@ -300,14 +295,7 @@ public class DrawerActivity extends AppCompatActivity {
     private Drawer.OnDrawerItemClickListener onDrawerItemClickListener = new Drawer.OnDrawerItemClickListener() {
         @Override
         public boolean onItemClick(View view, int i, IDrawerItem iDrawerItem) {
-            ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
-                    new IDatabaseContext(getApplicationContext()));
-            if (i>2) {
-                //headerResult.setActiveProfile(iprofilelist.get(i - 3));
-                //profileDBAdapter.setActiveUser(profilesList.get(i - 3).getLogin());
-                //profilesList.get(i - 3).setUserActive(1);
-            }
-            return false;
+             return false;
         }
     };
 
@@ -343,10 +331,10 @@ public class DrawerActivity extends AppCompatActivity {
             if(imgFile.exists()){
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 // first two elements reserved
-                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(myBitmap).withIdentifier((int)item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
+                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(myBitmap).withIdentifier(item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
             }
             else
-                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.olejek).withIdentifier((int)item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
+                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.olejek).withIdentifier(item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
             iprofilelist.add(new_profile);
             headerResult.addProfile(new_profile, headerResult.getProfiles().size());
         }
@@ -357,7 +345,7 @@ public class DrawerActivity extends AppCompatActivity {
         profilesList = profileDBAdapter.getAllItems();
         cnt=0;
         for (Profiles item : profilesList) {
-            users_id[cnt]=(int)item.getId();
+            users_id[cnt]=item.getId();
             cnt = cnt + 1;
             if (cnt>MAX_USER_PROFILE) break;
         }
@@ -381,7 +369,7 @@ public class DrawerActivity extends AppCompatActivity {
         cnt=0;
         for (Profiles item : profilesList) {
             addProfile(item);
-            users_id[cnt]=(int)item.getId();
+            users_id[cnt]=item.getId();
             cnt = cnt + 1;
             if (cnt>MAX_USER_PROFILE) break;
         }
@@ -389,7 +377,7 @@ public class DrawerActivity extends AppCompatActivity {
 
     public boolean initDB() {
         boolean success = false;
-        DatabaseHelper helper = null;
+        DatabaseHelper helper;
         // создаём базу данных, в качестве контекста передаём свой, с
         // переопределёнными путями к базе
         try {

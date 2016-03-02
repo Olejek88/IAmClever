@@ -22,10 +22,7 @@ import com.github.mikephil.charting.components.YAxis;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
 import ru.shtrm.iamclever.IDatabaseContext;
 import ru.shtrm.iamclever.R;
@@ -49,7 +46,7 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
 
     public static FragmentUser newInstance(String title) {
         FragmentUser f = new FragmentUser();
-        Bundle args = new Bundle();
+        //Bundle args = new Bundle();
         return (f);
     }
 
@@ -64,10 +61,9 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
                 new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
         if (user!=null) {
-            login.setText(user.getLogin().toString());
-            name.setText(user.getName().toString());
-            image_name = user.getImage().toString();
-            // TODO написать подгрузку изображения
+            login.setText(user.getLogin());
+            name.setText(user.getName());
+            image_name = user.getImage();
             File sdcard = Environment.getExternalStorageDirectory();
             String targetfilename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + user.getImage();
             File imgFile = new  File(targetfilename);
@@ -131,12 +127,6 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_PHOTO_FOR_AVATAR);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -161,25 +151,5 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
                 break;
         }
 
-    }
-
-    public void storeImage(String name) throws IOException {
-        File sdcard = Environment.getExternalStorageDirectory();
-        String targetfilename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + name;
-        File targetfile = new File (targetfilename);
-        if (!targetfile.getParentFile().exists()) {
-            targetfile.getParentFile().mkdirs();
-        }
-
-        OutputStream outStream = new FileOutputStream(targetfile);
-        byte[] buffer = new byte[1024];
-        int len = inputStream.read(buffer);
-        while (len != -1) {
-                outStream.write(buffer, 0, len);
-                len = inputStream.read(buffer);
-            }
-        outStream.close();
-        //Toast.makeText(getActivity().getApplicationContext(),
-        //                "Не удалось создать файл " + targetfilename, Toast.LENGTH_LONG).show();
     }
 }

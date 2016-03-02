@@ -82,7 +82,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 RightAnswer = question.getAnswer();
                 answer = answersDBAdapter.getAnswerByQuestionAndProfile(question.getId(),user.getId());
                 // TODO обновить статистику пользователя
-                question_text.setText(questionTypeDBAdapter.getNameByID(""+question.getType()) + ": " + question.getOriginal());
+                question_text.setText(questionTypeDBAdapter.getNameByID("" + question.getType()) + ": " + question.getOriginal());
                 Random r = new Random();
                 int i1 = r.nextInt(MAX_QUESTIONS)+1;
 
@@ -138,7 +138,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                             "Неправильно (((", Toast.LENGTH_LONG).show();
                 }
                 if (answer != null)
-                    answersDBAdapter.replace(answer);
+                    answersDBAdapter.updateItem(answer);
 
                 Fragment f = FragmentWelcome.newInstance("Welcome");
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();

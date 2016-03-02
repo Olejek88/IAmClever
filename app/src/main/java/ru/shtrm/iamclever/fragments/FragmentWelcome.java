@@ -19,7 +19,7 @@ public class FragmentWelcome extends Fragment {
 
     public static FragmentWelcome newInstance(String title) {
         FragmentWelcome f = new FragmentWelcome();
-        Bundle args = new Bundle();
+        //Bundle args = new Bundle();
         gTitle=title;
         return (f);
     }

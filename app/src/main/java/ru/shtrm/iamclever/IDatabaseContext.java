@@ -56,9 +56,9 @@ public class IDatabaseContext extends ContextWrapper {
     }
 
 	/**
-	 * @param name
-	 * @param mode
-	 * @param factory
+	 * @param name - название базы
+	 * @param mode - режим открытия базы
+	 * @param factory - Cursor factory
 	 * @since v1
 	 */
 	@Override
@@ -78,10 +78,10 @@ public class IDatabaseContext extends ContextWrapper {
 	}
 
 	/**
-	 * @param name
-	 * @param mode
-	 * @param factory
-	 * @param errorHandler
+	 * @param name - имя базы
+	 * @param mode - режим открытия
+	 * @param factory - cursor Factory
+	 * @param errorHandler - error Handler
 	 * @since v11
 	 */
 	@Override

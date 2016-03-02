@@ -51,8 +51,13 @@ public class AnswersDBAdapter extends BaseDBAdapter {
     public Answers getAnswerByQuestionAndProfile(int question, int profile) {
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, FIELD_QUESTION_NAME + "=? AND " + FIELD_PROFILE_NAME + "<=?", new String[]{""+question, ""+profile}, null, null, null);
-        if (cursor.moveToFirst()) {
-            return getItem(cursor);
+        if (cursor.getCount()==0) {
+            replaceItem(profile, 1, question, 0, 0);
+            cursor = mDb.query(TABLE_NAME, mColumns, FIELD_QUESTION_NAME + "=? AND " + FIELD_PROFILE_NAME + "<=?", new String[]{""+question, ""+profile}, null, null, null);
+        }
+        if (cursor.getCount()>0) {
+            if (cursor.moveToFirst())
+                return getItem(cursor);
         }
         return null;
     }
@@ -122,7 +127,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
      * <p>Добавляет/изменяет запись в таблице users</p>
      * @return long id столбца или -1 если не удалось добавить запись
      */
-    public long replaceItem(int profile, int level, int question, int correct, int incorrect) {
+    public long replaceItem(int profile, int level, int question, int correct, int incorrect, boolean update) {
         long id;
         ContentValues values = new ContentValues();
         values.put(FIELD_QUESTION_NAME, question);
@@ -130,7 +135,11 @@ public class AnswersDBAdapter extends BaseDBAdapter {
         values.put(FIELD_LEVEL_NAME, level);
         values.put(FIELD_CORRECT_NAME, correct);
         values.put(FIELD_INCORRECT_NAME, incorrect);
-        id  = mDb.replace(TABLE_NAME, null, values);
+        if (update)
+            id = mDb.update(TABLE_NAME, values, FIELD_QUESTION_NAME + "=? AND " + FIELD_PROFILE_NAME + "=?", new String[] { String.valueOf(question), String.valueOf(profile)});
+        else
+            id  = mDb.replace(TABLE_NAME, null, values);
+
         return id;
     }
 
@@ -140,7 +149,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long replaceItem(Answers answer) {
-        return replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect());
+        return replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect(),false);
     }
     /**
      * <p>Иизменяет запись в таблице users</p>
@@ -148,7 +157,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Answers answer) {
-        return replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect());
+        return replaceItem(answer.getQuestion(),answer.getProfile(),answer.getLevel(),answer.getCorrect(),answer.getIncorrect(),true);
     }
 
 }
