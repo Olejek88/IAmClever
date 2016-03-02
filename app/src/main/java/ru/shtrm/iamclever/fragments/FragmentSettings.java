@@ -180,7 +180,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
                     user.setPeriod(periodSpinner.getSelectedItemPosition());
                     Long id = users.updateItem(user);
                     if (id > 0) {
-                        Fragment f = FragmentWelcome.newInstance("Welcome");
+                        Fragment f = FragmentTips.newInstance("Tip");
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                     }
                 }

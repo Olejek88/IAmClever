@@ -49,6 +49,7 @@ import ru.shtrm.iamclever.fragments.FragmentIntro;
 import ru.shtrm.iamclever.fragments.FragmentNewWords;
 import ru.shtrm.iamclever.fragments.FragmentQuestion;
 import ru.shtrm.iamclever.fragments.FragmentSettings;
+import ru.shtrm.iamclever.fragments.FragmentTips;
 
 public class DrawerActivity extends AppCompatActivity {
     private static final int PROFILE_ADD = 1;
@@ -61,6 +62,7 @@ public class DrawerActivity extends AppCompatActivity {
     private int ActiveUserID;
     private Timer tShow = new Timer();
     private Timer tQuest = new Timer();
+    private Timer tTips = new Timer();
     private Handler handler = new Handler ();
 
     //save our header or result
@@ -256,19 +258,40 @@ public class DrawerActivity extends AppCompatActivity {
                 }
             }
         },10,15*1000);
+
+        tTips.schedule(new TimerTask(){
+            @Override
+            public void run(){
+                if (isActive) {
+                    handler.postDelayed (new Runnable (){
+                        public void run (){
+                            RunShow(2);
+                        }
+                    },2000);
+                }
+            }
+        },120000,180*1000);
+
         isVisible = true;
     }
 
     private void RunShow (int type) {
         if (isActive) {
-            if (type==0) {
-                Fragment f = FragmentNewWords.newInstance("Lesson");
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            Fragment f;
+            switch (type) {
+                case 0:
+                    f = FragmentNewWords.newInstance("Lesson");
+                    break;
+                case 1:
+                    f = FragmentQuestion.newInstance("Question");
+                    break;
+                case 2:
+                    f = FragmentTips.newInstance("Tips");
+                    break;
+                default:
+                    f = FragmentIntro.newInstance("Welcome");
             }
-            else {
-                Fragment f = FragmentQuestion.newInstance("Question");
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
         }
     }
 

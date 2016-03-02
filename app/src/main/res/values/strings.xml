@@ -57,4 +57,5 @@
     <string name="answer">Перевод</string>
     <string name="add_new_word">Добавьте новое слово</string>
     <string name="question_level">Тип и уровень вопроса</string>
+    <string name="default_tips">Common European Framework of Reference - система уровней владения иностранным языком, используемая в Европейском Союзе. Соответствующая директива была выработана Советом Европы как основная часть проекта «Изучение языков для европейского гражданства» («Language Learning for European Citizenship») между 1989 и 1996 годами. Главная цель системы - предоставить метод оценки и обучения, применимый для всех европейских языков.</string>
 </resources>

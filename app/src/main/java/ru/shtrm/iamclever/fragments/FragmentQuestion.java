@@ -112,7 +112,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case  R.id.Question_Cancel: {
-                Fragment f = FragmentWelcome.newInstance("Welcome");
+                Fragment f = FragmentTips.newInstance("Tip");
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 break;
             }
@@ -140,7 +140,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 if (answer != null)
                     answersDBAdapter.updateItem(answer);
 
-                Fragment f = FragmentWelcome.newInstance("Welcome");
+                Fragment f = FragmentTips.newInstance("Tip");
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 break;
             }
