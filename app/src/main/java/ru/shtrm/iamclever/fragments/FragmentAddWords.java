@@ -81,7 +81,6 @@ public class FragmentAddWords extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
             case R.id.add_word_button_submit:
                 QuestionsDBAdapter questions = new QuestionsDBAdapter(
                         new IDatabaseContext(getActivity().getApplicationContext()));
@@ -115,7 +114,6 @@ public class FragmentAddWords extends Fragment implements View.OnClickListener {
             default:
                 break;
         }
-
     }
 
 }

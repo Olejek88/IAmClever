@@ -56,4 +56,14 @@
         <item>3 часа</item>
         <item>4 часа</item>
     </string-array>
+    <integer-array name="time_sec">
+        <item>300</item>
+        <item>600</item>
+        <item>900</item>
+        <item>1800</item>
+        <item>3600</item>
+        <item>7200</item>
+        <item>9600</item>
+        <item>12000</item>
+    </integer-array>
 </resources>

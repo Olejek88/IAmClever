@@ -7,7 +7,7 @@ import android.database.Cursor;
 import ru.shtrm.iamclever.db.tables.Tips;
 
 public class TipsDBAdapter extends BaseDBAdapter {
-	public static final String TABLE_NAME = "UserStats";
+	public static final String TABLE_NAME = "Tips";
 
 	public static final String FIELD_ID_NAME = "id";
 	public static final String FIELD_LANG_NAME = "lang";

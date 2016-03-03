@@ -36,6 +36,7 @@ import com.mikepenz.octicons_typeface_library.Octicons;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -71,12 +72,17 @@ public class DrawerActivity extends AppCompatActivity {
     private ArrayList<IProfile> iprofilelist;
     private List<Profiles> profilesList;
     private int cnt = 0;
+    private int period_quest=12000;
+    private int hour_start=0;
+    private int hour_end=23;
     private int users_id[];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_dark_toolbar);
+        ProfilesDBAdapter users = new ProfilesDBAdapter(
+                new IDatabaseContext(getApplicationContext()));
 
         iprofilelist = new ArrayList<>();
         users_id = new int[MAX_USER_PROFILE];
@@ -125,12 +131,16 @@ public class DrawerActivity extends AppCompatActivity {
 
         fillProfileList();
 
-        ProfilesDBAdapter users = new ProfilesDBAdapter(
-                new IDatabaseContext(getApplicationContext()));
         Profiles user = users.getActiveUser();
         if (user != null) {
             ActiveUserID = user.getId();
             isActive = user.getActive() > 0;
+            if (user.getPeriod() > 0)
+                    period_quest = getResources().getIntArray(R.array.time_sec)[user.getPeriod()];
+            if (user.getStart() > 0)
+                hour_start = user.getStart();
+            if (user.getEnd() > 0)
+                hour_end = user.getEnd();
         }
 
         //Create the drawer
@@ -235,33 +245,48 @@ public class DrawerActivity extends AppCompatActivity {
                     }, 2000);
                 }
             }
-        },1000,150*1000);
+        },period_quest*1000/5,150*1000);
 
         tQuest.schedule(new TimerTask(){
             @Override
             public void run(){
-                if (isActive && false) {
-                if (!isVisible) {
-                    ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                    List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
-                    for (int i = 0; i < tasklist.size(); i++) {
-                        ActivityManager.RunningTaskInfo taskinfo = tasklist.get(i);
-                        if (taskinfo.topActivity.getPackageName().equals("ru.shtrm.iamclever"))
-                            am.moveTaskToFront(taskinfo.id, 0);
+                if (isActive) {
+                    if (!isVisible) {
+                        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                        List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
+                        for (int i = 0; i < tasklist.size(); i++) {
+                            ActivityManager.RunningTaskInfo taskinfo = tasklist.get(i);
+                            if (taskinfo.topActivity.getPackageName().equals("ru.shtrm.iamclever"))
+                                am.moveTaskToFront(taskinfo.id, 0);
+                        }
                     }
-                }
-                handler.postDelayed (new Runnable (){
-                    public void run (){
-                        RunShow(1);
-                    }
-                },2000);
+                    Calendar cal = Calendar.getInstance();
+                    int hour = cal.get(Calendar.HOUR);
+                    if (hour>=hour_start && hour<hour_end)
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                RunShow(1);
+                            }
+                        }, 2000);
                 }
             }
-        },10,15*1000);
+        },period_quest*1000,15*1000);
 
         tTips.schedule(new TimerTask(){
             @Override
             public void run(){
+                // check settings
+                ProfilesDBAdapter users = new ProfilesDBAdapter(
+                        new IDatabaseContext(getApplicationContext()));
+                Profiles user = users.getActiveUser();
+                if (user != null) {
+                    if (user.getPeriod() > 0)
+                        period_quest = getResources().getIntArray(R.array.time_sec)[user.getPeriod()];
+                    if (user.getStart() > 0)
+                        hour_start=user.getStart();
+                    if (user.getEnd() > 0)
+                        hour_end=user.getEnd();
+                }
                 if (isActive) {
                     handler.postDelayed (new Runnable (){
                         public void run (){
@@ -425,11 +450,20 @@ public class DrawerActivity extends AppCompatActivity {
         isVisible=true;
     }
 
-
     @Override
     public void onPause()
     {
         super.onPause();
         isVisible=false;
+    }
+
+    private int getPeriodBye(String time) {
+        int i = -1;
+        for (String cc: getResources().getStringArray(R.array.time)) {
+            i++;
+            if (cc.equals(time))
+                break;
+        }
+        return getResources().getIntArray(R.array.time_sec)[i];
     }
 }
