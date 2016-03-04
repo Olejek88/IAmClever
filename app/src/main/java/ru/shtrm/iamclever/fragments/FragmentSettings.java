@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
@@ -23,18 +22,13 @@ import ru.shtrm.iamclever.IDatabaseContext;
 import ru.shtrm.iamclever.R;
 import ru.shtrm.iamclever.db.adapters.LanguagesDBAdapter;
 import ru.shtrm.iamclever.db.adapters.ProfilesDBAdapter;
-import ru.shtrm.iamclever.db.adapters.StatsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Profiles;
 
 public class FragmentSettings extends Fragment implements View.OnClickListener {
     private static final int PICK_PHOTO_FOR_AVATAR = 1;
-    private ImageView iView;
     private InputStream inputStream;
     private Button one;
-    private EditText name,login,pass,image;
-    private String image_name;
     private ArrayAdapter<String> langSpinnerAdapter;
-    private ArrayAdapter<String> timeSpinnerAdapter;
 
     private CheckBox check;
 
@@ -52,10 +46,10 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public static FragmentSettings newInstance(String title) {
-        FragmentSettings f = new FragmentSettings();
-        Bundle args = new Bundle();
-        return (f);
+    public static FragmentSettings newInstance() {
+        //FragmentSettings f = new FragmentSettings();
+        //Bundle args = new Bundle();
+        return (new FragmentSettings());
     }
 
     @Override
@@ -77,12 +71,6 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
         lang1Spinner.setAdapter(langSpinnerAdapter);
         lang2Spinner.setAdapter(langSpinnerAdapter);
         lang3Spinner.setAdapter(langSpinnerAdapter);
-
-        timeSpinnerAdapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_dropdown_item,
-                new ArrayList<String>());
-        //startSpinner.setAdapter(timeSpinnerAdapter);
-        //endSpinner.setAdapter(timeSpinnerAdapter);
 
         LanguagesDBAdapter langDBAdapter = new LanguagesDBAdapter(
                 new IDatabaseContext(getActivity()));
@@ -130,12 +118,6 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_PHOTO_FOR_AVATAR);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,6 +127,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
                 return;
             }
             try {
+                ImageView iView = null;
                 inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
                 iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
             } catch (FileNotFoundException e) {
@@ -156,8 +139,6 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         ProfilesDBAdapter users = new ProfilesDBAdapter(
-                new IDatabaseContext(getActivity().getApplicationContext()));
-        StatsDBAdapter stats = new StatsDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
 
         switch (v.getId()) {
@@ -180,7 +161,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
                     user.setPeriod(periodSpinner.getSelectedItemPosition());
                     Long id = users.updateItem(user);
                     if (id > 0) {
-                        Fragment f = FragmentTips.newInstance("Tip");
+                        Fragment f = FragmentTips.newInstance();
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                     }
                 }

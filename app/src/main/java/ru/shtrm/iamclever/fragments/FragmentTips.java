@@ -20,19 +20,18 @@ import ru.shtrm.iamclever.db.adapters.TipsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Tips;
 
 public class FragmentTips extends Fragment {
-    private ImageView iView;
 
     public FragmentTips() {
         // Required empty public constructor
     }
 
-    public static FragmentTips newInstance(String title) {
-        FragmentTips f = new FragmentTips();
-        return (f);
+    public static FragmentTips newInstance() {
+        return (new FragmentTips());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        ImageView iView;
         File sd_card = Environment.getExternalStorageDirectory();
         View view = inflater.inflate(R.layout.fragment_tips, container, false);
         TextView tip_text = (TextView)view.findViewById(R.id.tips_text);

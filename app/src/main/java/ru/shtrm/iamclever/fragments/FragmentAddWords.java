@@ -107,7 +107,7 @@ public class FragmentAddWords extends Fragment implements View.OnClickListener {
                 long id = questions.updateItem(question);
                 if (id>0)
                     {
-                       Fragment f = FragmentTips.newInstance("Tips");
+                       Fragment f = FragmentTips.newInstance();
                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                     }
                 break;

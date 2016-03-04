@@ -119,7 +119,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                     mNewWordsSubmit.setEnabled(false);
                 break;
             case R.id.CheckNewWords: {
-                Fragment f = FragmentTips.newInstance("Tips");
+                Fragment f = FragmentTips.newInstance();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 break;
             }

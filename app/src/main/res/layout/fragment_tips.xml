@@ -16,6 +16,7 @@
             android:gravity="center"
             android:layout_margin="5sp"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/image_description"
             android:src="@drawable/cefr" />
 
         <TextView android:id="@+id/tips_text"

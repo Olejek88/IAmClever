@@ -31,21 +31,17 @@ import ru.shtrm.iamclever.db.tables.Profiles;
 public class FragmentEditUser extends Fragment implements View.OnClickListener {
     private static final int PICK_PHOTO_FOR_AVATAR = 1;
     private ImageView iView;
-    private InputStream inputStream;
-    private Button one;
-    private Button delete;
-    private EditText name,login,pass,image;
+    private EditText name,login,pass;
     private String image_name;
-    private int user_id;
 
     public FragmentEditUser() {
         // Required empty public constructor
     }
 
     public static FragmentEditUser newInstance(String title) {
-        FragmentEditUser f = new FragmentEditUser();
+        //FragmentEditUser f = new FragmentEditUser();
         //Bundle args = new Bundle();
-        return (f);
+        return (new FragmentEditUser());
     }
 
     @Override
@@ -53,9 +49,9 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_editprofile, container, false);
         iView = (ImageView) view.findViewById(R.id.profile_add_image);
         iView.setOnClickListener(this); // calling onClick() method
-        one = (Button) view.findViewById(R.id.profile_button_submit);
+        Button one = (Button) view.findViewById(R.id.profile_button_submit);
         one.setOnClickListener(this); // calling onClick() method
-        delete = (Button) view.findViewById(R.id.profile_button_delete);
+        Button delete = (Button) view.findViewById(R.id.profile_button_delete);
         delete.setOnClickListener(this); // calling onClick() method
 
         name = (EditText) view.findViewById(R.id.profile_add_name);
@@ -97,7 +93,7 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
                 return;
             }
             try {
-                inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
+                InputStream inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
                 iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -141,7 +137,7 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.profile_button_delete:
-                user_id = users.getActiveUser().getId();
+                int user_id = users.getActiveUser().getId();
                 stats.deleteAllItem(user_id);
                 users.deleteItem(login.getText().toString());
                 ((DrawerActivity)getActivity()).deleteProfile(user_id);
@@ -157,16 +153,16 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
 
     public void storeImage(String name) throws IOException {
         Bitmap bmp;
-        File sdcard = Environment.getExternalStorageDirectory();
-        String targetfilename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + name;
-        File targetfile = new File (targetfilename);
-        if (!targetfile.getParentFile().exists()) {
-            targetfile.getParentFile().mkdirs();
+        File sd_card = Environment.getExternalStorageDirectory();
+        String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + name;
+        File target_file = new File (target_filename);
+        if (!target_file.getParentFile().exists()) {
+            target_file.getParentFile().mkdirs();
         }
         iView.buildDrawingCache();
 
         bmp = iView.getDrawingCache();
-        FileOutputStream out = new FileOutputStream(targetfile);
+        FileOutputStream out = new FileOutputStream(target_file);
         bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
         out.flush();
         out.close();

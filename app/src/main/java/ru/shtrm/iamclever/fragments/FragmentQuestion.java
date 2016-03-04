@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,26 +27,25 @@ import ru.shtrm.iamclever.db.tables.Stats;
 
 public class FragmentQuestion extends Fragment implements View.OnClickListener {
     private static final int MAX_QUESTIONS = 5;
-    private int cnt=0;
-    private RadioGroup rg;
     private RadioButton rb_text1,rb_text2,rb_text3,rb_text4,rb_text5;
-    private Questions question, question2;
+    private Questions question;
     private Answers answer;
     private Stats stats;
-    private String RightAnswer;
 
     public FragmentQuestion() {
         // Required empty public constructor
     }
 
     public static FragmentQuestion newInstance(String title) {
-        FragmentQuestion f = new FragmentQuestion();
-        Bundle args = new Bundle();
-        return (f);
+        //FragmentQuestion f = new FragmentQuestion();
+        //Bundle args = new Bundle();
+        return (new FragmentQuestion());
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        String RightAnswer;
+        Questions question2;
         View view = inflater.inflate(R.layout.dialog_question, container, false);
         TextView question_text = (TextView)view.findViewById(R.id.question_text);
         rb_text1 = (RadioButton)view.findViewById(R.id.answer1);
@@ -56,7 +54,6 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
         rb_text4 = (RadioButton)view.findViewById(R.id.answer4);
         rb_text5 = (RadioButton)view.findViewById(R.id.answer5);
 
-        rg = (RadioGroup)view.findViewById(R.id.radio);
         Button mQuestionAnswer = (Button)view.findViewById(R.id.Question_Answer);
         mQuestionAnswer.setOnClickListener(this);
 
@@ -81,7 +78,6 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
             if (question != null) {
                 RightAnswer = question.getAnswer();
                 answer = answersDBAdapter.getAnswerByQuestionAndProfile(question.getId(),user.getId());
-                // TODO обновить статистику пользователя
                 question_text.setText(questionTypeDBAdapter.getNameByID("" + question.getType()) + ": " + question.getOriginal());
                 Random r = new Random();
                 int i1 = r.nextInt(MAX_QUESTIONS)+1;
@@ -112,24 +108,30 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case  R.id.Question_Cancel: {
-                Fragment f = FragmentTips.newInstance("Tip");
+                Fragment f = FragmentTips.newInstance();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 break;
             }
             case R.id.Question_Answer: {
                 AnswersDBAdapter answersDBAdapter = new AnswersDBAdapter(
                         new IDatabaseContext(getActivity().getApplicationContext()));
+                StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
+                        new IDatabaseContext(getActivity().getApplicationContext()));
+
                 boolean right=false;
                 if (rb_text1.isChecked() && rb_text1.getText().equals(question.getAnswer())) right=true;
                 if (rb_text2.isChecked() && rb_text2.getText().equals(question.getAnswer())) right=true;
                 if (rb_text3.isChecked() && rb_text3.getText().equals(question.getAnswer())) right=true;
                 if (rb_text4.isChecked() && rb_text4.getText().equals(question.getAnswer())) right=true;
                 if (rb_text5.isChecked() && rb_text5.getText().equals(question.getAnswer())) right=true;
+                stats.setQuestions(stats.getQuestions()+1);
                 if (right) {
                     if (answer != null)
                         answer.setCorrect(answer.getCorrect() + 1);
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Правильно!", Toast.LENGTH_LONG).show();
+                    stats.setQuestions_right(stats.getQuestions_right()+1);
+
                 }
                 else {
                     if (answer != null)
@@ -137,10 +139,14 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Неправильно (((", Toast.LENGTH_LONG).show();
                 }
+                stats.setExams(stats.getExams()+1);
+                stats.setExams_complete(stats.getExams_complete()+1);
+                statsDBAdapter.updateItem(stats);
+
                 if (answer != null)
                     answersDBAdapter.updateItem(answer);
 
-                Fragment f = FragmentTips.newInstance("Tip");
+                Fragment f = FragmentTips.newInstance();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 break;
             }

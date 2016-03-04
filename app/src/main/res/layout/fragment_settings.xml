@@ -164,7 +164,6 @@
             android:id="@+id/profile_button_submit"
             android:layout_height="wrap_content"
             android:text="@string/profile_change_button"
-            android:onClick="sendFeedback"
             android:layout_width="fill_parent"/>
 
     </LinearLayout>

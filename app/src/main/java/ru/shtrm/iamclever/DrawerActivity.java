@@ -72,7 +72,7 @@ public class DrawerActivity extends AppCompatActivity {
     private ArrayList<IProfile> iprofilelist;
     private List<Profiles> profilesList;
     private int cnt = 0;
-    private int period_quest=12000;
+    private int period_quest=1200;
     private int hour_start=0;
     private int hour_end=23;
     private int users_id[];
@@ -174,7 +174,7 @@ public class DrawerActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             Intent intent = null;
                             if (drawerItem.getIdentifier() == 1) {
-                                Fragment f = FragmentSettings.newInstance("User Settings");
+                                Fragment f = FragmentSettings.newInstance();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                             } else if (drawerItem.getIdentifier() == 4) {
                                 Fragment f = FragmentAddWords.newInstance("Add new words");
@@ -226,7 +226,7 @@ public class DrawerActivity extends AppCompatActivity {
         tShow.schedule(new TimerTask(){
             @Override
             public void run() {
-                if (isActive && false) {
+                if (isActive) {
                     if (!isVisible) {
                         ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
                         //TODO заменить getRunningTasks
@@ -237,7 +237,6 @@ public class DrawerActivity extends AppCompatActivity {
                                 am.moveTaskToFront(taskinfo.id, 0);
                         }
                     }
-
                     handler.postDelayed(new Runnable() {
                         public void run() {
                             RunShow(0);
@@ -245,7 +244,7 @@ public class DrawerActivity extends AppCompatActivity {
                     }, 2000);
                 }
             }
-        },period_quest*1000/5,150*1000);
+        },100*1000,period_quest*1000/5);
 
         tQuest.schedule(new TimerTask(){
             @Override
@@ -270,7 +269,7 @@ public class DrawerActivity extends AppCompatActivity {
                         }, 2000);
                 }
             }
-        },period_quest*1000,15*1000);
+        },150*1000,period_quest*1000);
 
         tTips.schedule(new TimerTask(){
             @Override
@@ -280,11 +279,11 @@ public class DrawerActivity extends AppCompatActivity {
                         new IDatabaseContext(getApplicationContext()));
                 Profiles user = users.getActiveUser();
                 if (user != null) {
-                    if (user.getPeriod() > 0)
+                    if (user.getPeriod() >= 0)
                         period_quest = getResources().getIntArray(R.array.time_sec)[user.getPeriod()];
-                    if (user.getStart() > 0)
+                    if (user.getStart() >= 0)
                         hour_start=user.getStart();
-                    if (user.getEnd() > 0)
+                    if (user.getEnd() >= 0)
                         hour_end=user.getEnd();
                 }
                 if (isActive) {
@@ -311,7 +310,7 @@ public class DrawerActivity extends AppCompatActivity {
                     f = FragmentQuestion.newInstance("Question");
                     break;
                 case 2:
-                    f = FragmentTips.newInstance("Tips");
+                    f = FragmentTips.newInstance();
                     break;
                 default:
                     f = FragmentIntro.newInstance("Welcome");
@@ -455,15 +454,5 @@ public class DrawerActivity extends AppCompatActivity {
     {
         super.onPause();
         isVisible=false;
-    }
-
-    private int getPeriodBye(String time) {
-        int i = -1;
-        for (String cc: getResources().getStringArray(R.array.time)) {
-            i++;
-            if (cc.equals(time))
-                break;
-        }
-        return getResources().getIntArray(R.array.time_sec)[i];
     }
 }

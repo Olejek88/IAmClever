@@ -47,10 +47,10 @@ public class IDatabaseContext extends ContextWrapper {
 	 */
 	@Override
     public boolean deleteDatabase(String name) {
-		boolean result = false;
+		boolean result;
 		File dbFile = getDatabasePath(name);
 		File journalFile = new File(dbFile.toString() + "-journal");
-		result |= dbFile.delete();
+		result = dbFile.delete();
 		result |= journalFile.delete();
         return result;
     }
@@ -110,8 +110,7 @@ public class IDatabaseContext extends ContextWrapper {
 		File result = new File(dbfile);
 		
 		if (!result.getParentFile().exists()) {
-		    result.getParentFile().mkdirs();
-		}
+        }
 		
 		if (Log.isLoggable(TAG, Log.WARN)) {
 			Log.w(TAG, "getDatabasePath(" + name + ") = " + result.getAbsolutePath());

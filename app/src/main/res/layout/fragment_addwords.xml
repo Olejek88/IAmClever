@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:id="@+id/add_word_LinearLayout01"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:orientation="vertical">
         <TextView
@@ -59,21 +59,22 @@
             android:id="@+id/add_word_original"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:hint="@string/original"
+            android:gravity="start"
             android:text="@string/original"/>
 
         <EditText
             android:id="@+id/add_word_answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:gravity="start"
+            android:hint="@string/answer"
             android:text="@string/answer"/>
 
         <Button
             android:id="@+id/add_word_button_submit"
             android:layout_height="wrap_content"
             android:text="@string/profile_submit_button"
-            android:onClick="sendFeedback"
             android:layout_width="fill_parent"/>
     </LinearLayout>
 </ScrollView>

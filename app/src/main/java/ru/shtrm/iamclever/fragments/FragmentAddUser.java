@@ -36,23 +36,19 @@ import ru.shtrm.iamclever.db.tables.Stats;
 public class FragmentAddUser extends Fragment implements View.OnClickListener {
     private static final int PICK_PHOTO_FOR_AVATAR = 1;
     private ImageView iView;
-    private InputStream inputStream;
-    private Button one;
-    private ArrayAdapter<String> langSpinnerAdapter;
     private Spinner lang1Spinner;
     private Spinner lang2Spinner;
     private Spinner lang3Spinner;
-    private EditText name,login,pass,image;
-    private String image_name;
+    private EditText name,login,pass;
 
     public FragmentAddUser() {
         // Required empty public constructor
     }
 
     public static FragmentAddUser newInstance(String title) {
-        FragmentAddUser f = new FragmentAddUser();
-        Bundle args = new Bundle();
-        return (f);
+        //FragmentAddUser f = new FragmentAddUser();
+        //Bundle args = new Bundle();
+        return (new FragmentAddUser());
     }
 
     @Override
@@ -60,14 +56,14 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_addprofile, container, false);
         iView = (ImageView) view.findViewById(R.id.profile_add_image);
         iView.setOnClickListener(this); // calling onClick() method
-        one = (Button) view.findViewById(R.id.profile_button_submit);
+        Button one = (Button) view.findViewById(R.id.profile_button_submit);
         one.setOnClickListener(this); // calling onClick() method
 
         lang1Spinner = (Spinner) view.findViewById(R.id.profile_add_lang1);
         lang2Spinner = (Spinner) view.findViewById(R.id.profile_add_lang2);
         lang3Spinner = (Spinner) view.findViewById(R.id.profile_add_lang3);
 
-        langSpinnerAdapter = new ArrayAdapter<String>(getContext(),
+        ArrayAdapter<String> langSpinnerAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 new ArrayList<String>());
         lang1Spinner.setAdapter(langSpinnerAdapter);
@@ -104,7 +100,7 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
                 return;
             }
             try {
-                inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
+                InputStream inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
                 iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -126,8 +122,8 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
                         new IDatabaseContext(getActivity().getApplicationContext()));
                 StatsDBAdapter stats = new StatsDBAdapter(
                         new IDatabaseContext(getActivity().getApplicationContext()));
-                Profiles profile = new Profiles();
-                image_name="profile";
+                Profiles profile;
+                String image_name = "profile";
                 profile = users.getItem(login.getText().toString());
                 if (profile!=null) {
                      Toast.makeText(getActivity().getApplicationContext(),
@@ -154,7 +150,7 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
                 //long id = users.replaceItem(name.getText().toString(),image_name, login.getText().toString(), pass.getText().toString(),lang1Spinner.getSelectedItemPosition(), lang2Spinner.getSelectedItemPosition(), lang3Spinner.getSelectedItemPosition(), (int)(System.currentTimeMillis() / 1000L), 1, true);
                 long id = users.replaceItem(profile);
                 try {
-                    image_name="profile"+id+".jpg";
+                    image_name ="profile"+id+".jpg";
                     storeImage(image_name);
                 } catch (IOException e) {
                     e.printStackTrace();

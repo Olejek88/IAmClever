@@ -36,6 +36,8 @@
         <item name="android:textAllCaps">false</item>
     </style>
 
-    <style name="FullscreenTheme" parent="MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus"></style>
+    <style name="FullscreenTheme" parent="MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
+        
+    </style>
 
 </resources>
