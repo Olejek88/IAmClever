@@ -34,9 +34,9 @@ public class FragmentAddWords extends Fragment implements View.OnClickListener {
     }
 
     public static FragmentAddWords newInstance(String title) {
-        FragmentAddWords f = new FragmentAddWords();
-        Bundle args = new Bundle();
-        return (f);
+        //FragmentAddWords f = new FragmentAddWords();
+        //Bundle args = new Bundle();
+        return (new FragmentAddWords());
     }
 
     @Override

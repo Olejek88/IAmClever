@@ -43,9 +43,9 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     }
 
     public static FragmentNewWords newInstance(String title) {
-        FragmentNewWords f = new FragmentNewWords();
-        Bundle args = new Bundle();
-        return (f);
+        //FragmentNewWords f = new FragmentNewWords();
+        //Bundle args = new Bundle();
+        return (new FragmentNewWords());
     }
 
     @Override

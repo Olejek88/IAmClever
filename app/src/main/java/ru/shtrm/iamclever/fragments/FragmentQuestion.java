@@ -124,13 +124,19 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 if (rb_text3.isChecked() && rb_text3.getText().equals(question.getAnswer())) right=true;
                 if (rb_text4.isChecked() && rb_text4.getText().equals(question.getAnswer())) right=true;
                 if (rb_text5.isChecked() && rb_text5.getText().equals(question.getAnswer())) right=true;
-                stats.setQuestions(stats.getQuestions()+1);
+                if (stats!=null) {
+                    stats.setQuestions(stats.getQuestions() + 1);
+                    stats.setExams(stats.getExams() + 1);
+                    stats.setExams_complete(stats.getExams_complete() + 1);
+                }
                 if (right) {
                     if (answer != null)
                         answer.setCorrect(answer.getCorrect() + 1);
-                    Toast.makeText(getActivity().getApplicationContext(),
+                    if (stats!=null)
+                        stats.setQuestions_right(stats.getQuestions_right() + 1);
+                        Toast.makeText(getActivity().getApplicationContext(),
                             "Правильно!", Toast.LENGTH_LONG).show();
-                    stats.setQuestions_right(stats.getQuestions_right()+1);
+                    if (stats!=null) stats.setQuestions_right(stats.getQuestions_right()+1);
 
                 }
                 else {
@@ -139,9 +145,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                     Toast.makeText(getActivity().getApplicationContext(),
                             "Неправильно (((", Toast.LENGTH_LONG).show();
                 }
-                stats.setExams(stats.getExams()+1);
-                stats.setExams_complete(stats.getExams_complete()+1);
-                statsDBAdapter.updateItem(stats);
+                if (stats!=null) statsDBAdapter.updateItem(stats);
 
                 if (answer != null)
                     answersDBAdapter.updateItem(answer);

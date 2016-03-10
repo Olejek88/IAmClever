@@ -20,6 +20,9 @@
     <string name="profile_phrases_shown1">Выражений показано</string>
     <string name="profile_exams1">Зачетов пройдено</string>
     <string name="profile_questions1">Вопросов задано</string>
+    <string name="profile_questions_complete1">Вопросов правильно</string>
+    <string name="profile_shows1">Экзаменов показано</string>
+    <string name="profile_shows_complete1">Экзаменов закончено</string>
     <string name="profile_rights1">Правильных ответов</string>
     <string name="profile_login">E-mail</string>
     <string name="profile_password">Пароль</string>

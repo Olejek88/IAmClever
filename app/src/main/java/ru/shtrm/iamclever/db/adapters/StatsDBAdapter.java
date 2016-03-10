@@ -45,7 +45,9 @@ public class StatsDBAdapter extends BaseDBAdapter {
 		if (cursor.moveToFirst()) {
 			return getItem(cursor);
 		}
-
+        else {
+            replaceItem(lang, profile, 0, 0, 0, 0, 0);
+        }
 		return null;
 	}
 

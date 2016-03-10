@@ -2,11 +2,9 @@ package ru.shtrm.iamclever.fragments;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,22 +17,22 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarEntry;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import ru.shtrm.iamclever.IDatabaseContext;
 import ru.shtrm.iamclever.R;
 import ru.shtrm.iamclever.db.adapters.ProfilesDBAdapter;
+import ru.shtrm.iamclever.db.adapters.StatsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Profiles;
+import ru.shtrm.iamclever.db.tables.Stats;
 
 public class FragmentUser extends Fragment implements View.OnClickListener {
     private static final int PICK_PHOTO_FOR_AVATAR = 1;
     private ImageView iView;
-    private InputStream inputStream;
-    private TextView name,login;
-    private String image_name;
     protected BarChart mChart;
     private SeekBar mSeekBarX, mSeekBarY;
     private TextView tvX, tvY;
@@ -45,31 +43,42 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
     }
 
     public static FragmentUser newInstance(String title) {
-        FragmentUser f = new FragmentUser();
+        //FragmentUser f = new FragmentUser();
         //Bundle args = new Bundle();
-        return (f);
+        return new FragmentUser();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        iView = (ImageView) view.findViewById(R.id.profile_image);
-        iView.setOnClickListener(this); // calling onClick() method
-        name = (TextView) view.findViewById(R.id.profile_name);
-        login = (TextView) view.findViewById(R.id.profile_login);
+        ArrayList<Float> success = new ArrayList<Float>();
+
+        TextView name = (TextView) view.findViewById(R.id.settings_divider0);
+
+        TextView question = (TextView) view.findViewById(R.id.profile_question);
+        TextView question_complete = (TextView) view.findViewById(R.id.profile_question_complete);
+        TextView shows = (TextView) view.findViewById(R.id.profile_shows);
+        TextView shows_complete = (TextView) view.findViewById(R.id.profile_shows_complete);
+
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
+        StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
+                new IDatabaseContext(getActivity().getApplicationContext()));
+        ArrayList<String> xVals = new ArrayList<String>();
+        ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
+
         Profiles user = users.getActiveUser();
         if (user!=null) {
-            login.setText(user.getLogin());
             name.setText(user.getName());
-            image_name = user.getImage();
-            File sdcard = Environment.getExternalStorageDirectory();
-            String targetfilename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + user.getImage();
-            File imgFile = new  File(targetfilename);
-            if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                iView.setImageBitmap(myBitmap);
+            Stats stat = statsDBAdapter.getStatsByProfileAndLang(user.getId(),user.getLang1());
+            if (stat != null) {
+                question.setText(stat.getQuestions() + " (100%)");
+                if (stat.getQuestions()>0) {
+                    question_complete.setText(stat.getQuestions_right() + " (" + stat.getQuestions_right()*100/stat.getQuestions()  +  "%)");
+                    success.add((float) (stat.getQuestions_right()*100/stat.getQuestions()));
+                }
+                shows.setText(stat.getExams());
+                if (stat.getExams()>0) shows_complete.setText(stat.getExams_complete() + " (" + stat.getExams_complete()*100/stat.getExams()  +  "%)");
             }
         }
         tvX = (TextView) view.findViewById(R.id.tvXMax);
@@ -118,7 +127,15 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
         l.setFormSize(9f);
         l.setTextSize(11f);
         l.setXEntrySpace(4f);
-        //setData(12, 50);
+
+
+        //xVals.add("Вопросов");
+        //yVals1.add(new BarEntry(new float[] {
+//                val1, val2, val3
+  //      }, i));
+
+    //    xVals.add("Вопросов");
+
         // setting data
         mSeekBarY.setProgress(50);
         mSeekBarX.setProgress(12);
@@ -136,7 +153,7 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
                 return;
             }
             try {
-                inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
+                InputStream inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
                 iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();

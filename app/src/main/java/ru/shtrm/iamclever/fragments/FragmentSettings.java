@@ -65,7 +65,7 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
         endSpinner = (Spinner) view.findViewById(R.id.profile_choose_time_end);
         periodSpinner = (Spinner) view.findViewById(R.id.profile_choose_period);
 
-        langSpinnerAdapter = new ArrayAdapter<String>(getContext(),
+        langSpinnerAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 new ArrayList<String>());
         lang1Spinner.setAdapter(langSpinnerAdapter);

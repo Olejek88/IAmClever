@@ -1,7 +1,9 @@
 package ru.shtrm.iamclever;
 
 import android.app.ActivityManager;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -51,6 +53,7 @@ import ru.shtrm.iamclever.fragments.FragmentNewWords;
 import ru.shtrm.iamclever.fragments.FragmentQuestion;
 import ru.shtrm.iamclever.fragments.FragmentSettings;
 import ru.shtrm.iamclever.fragments.FragmentTips;
+import ru.shtrm.iamclever.fragments.FragmentUser;
 
 public class DrawerActivity extends AppCompatActivity {
     private static final int PROFILE_ADD = 1;
@@ -65,6 +68,7 @@ public class DrawerActivity extends AppCompatActivity {
     private Timer tQuest = new Timer();
     private Timer tTips = new Timer();
     private Handler handler = new Handler ();
+    ProgressDialog mProgressDialog;
 
     //save our header or result
     public AccountHeader headerResult = null;
@@ -176,9 +180,27 @@ public class DrawerActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == 1) {
                                 Fragment f = FragmentSettings.newInstance();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                            } else if (drawerItem.getIdentifier() == 2) {
+                                Fragment f = FragmentUser.newInstance("");
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                             } else if (drawerItem.getIdentifier() == 4) {
                                 Fragment f = FragmentAddWords.newInstance("Add new words");
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                            } else if (drawerItem.getIdentifier() == 5) {
+                                mProgressDialog = new ProgressDialog(DrawerActivity.this);
+                                mProgressDialog.setMessage("загружаем обновления");
+                                mProgressDialog.setIndeterminate(true);
+                                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                mProgressDialog.setCancelable(true);
+                                // execute this when the downloader must be fired
+                                final DownloadTask downloadTask = new DownloadTask(getApplicationContext(),DrawerActivity.this);
+                                downloadTask.execute("http://shtrm.ru/genxml.php");
+                                mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                    @Override
+                                    public void onCancel(DialogInterface dialog) {
+                                        downloadTask.cancel(true);
+                                    }
+                                });
                             }
                             else if (drawerItem.getIdentifier() == 14) {
                                 System.exit(0);
@@ -244,7 +266,7 @@ public class DrawerActivity extends AppCompatActivity {
                     }, 2000);
                 }
             }
-        },100*1000,period_quest*1000/5);
+        },100*1000,period_quest*200);
 
         tQuest.schedule(new TimerTask(){
             @Override
@@ -269,7 +291,7 @@ public class DrawerActivity extends AppCompatActivity {
                         }, 2000);
                 }
             }
-        },150*1000,period_quest*1000);
+        },150*1000,period_quest*1000/5);
 
         tTips.schedule(new TimerTask(){
             @Override
