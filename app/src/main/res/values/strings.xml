@@ -48,6 +48,7 @@
     <string name="choose_languages">Выберите изучаемые языки</string>
     <string name="default_time">Время запуска: </string>
     <string name="profile_change_button">Изменить</string>
+    <string name="button_remember">Запомнил</string>
     <string name="begin">Начало:</string>
     <string name="end">Конец:</string>
     <string name="period">Период</string>

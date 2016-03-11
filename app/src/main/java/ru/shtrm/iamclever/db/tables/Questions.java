@@ -10,6 +10,8 @@ public class Questions extends BaseTable {
     private int question;
     private String original;
     private String answer;
+    private int server_uid;
+    private String answer2;
 
 	public Questions() {
 	}
@@ -62,5 +64,17 @@ public class Questions extends BaseTable {
     }
     public void setQuestion(int question) {
         this.question = question;
+    }
+    public int getServer_uid() {
+        return server_uid;
+    }
+    public void setServer_uid(int server_uid) {
+        this.server_uid = server_uid;
+    }
+    public String getAnswer2() {
+        return answer2;
+    }
+    public void setAnswer2(String answer2) {
+        this.answer2 = answer2;
     }
 }

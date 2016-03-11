@@ -19,6 +19,8 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 	public static final String FIELD_QUESTION_NAME = "question";
     public static final String FIELD_ORIGINAL_NAME = "original";
     public static final String FIELD_ANSWER_NAME = "answer";
+    public static final String FIELD_SERUID_NAME = "seruid";
+    public static final String FIELD_ANSWER2_NAME = "answer2";
 
 	String[] mColumns = {
 			FIELD_ID_NAME,
@@ -28,7 +30,9 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 			FIELD_LEVELA_NAME,
 			FIELD_QUESTION_NAME,
             FIELD_ORIGINAL_NAME,
-            FIELD_ANSWER_NAME};
+            FIELD_ANSWER_NAME,
+            FIELD_SERUID_NAME,
+            FIELD_ANSWER2_NAME};
 
     public QuestionsDBAdapter(Context context) {
         super(context, TABLE_NAME);
@@ -81,6 +85,8 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 		item.setQuestion(cursor.getInt(cursor.getColumnIndex(FIELD_QUESTION_NAME)));
         item.setOriginal(cursor.getString(cursor.getColumnIndex(FIELD_ORIGINAL_NAME)));
         item.setAnswer(cursor.getString(cursor.getColumnIndex(FIELD_ANSWER_NAME)));
+        item.setServer_uid(cursor.getInt(cursor.getColumnIndex(FIELD_SERUID_NAME)));
+        item.setAnswer2(cursor.getString(cursor.getColumnIndex(FIELD_ANSWER2_NAME)));
 		return item;
 	}
 
@@ -112,7 +118,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 	 * <p>Добавляет/изменяет запись в таблице users</p>
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
-	public long replaceItem(int lang, int type, int level, String levelA, int question, String original, String answer) {
+	public long replaceItem(int lang, int type, int level, String levelA, int question, String original, String answer, int ser_uid, String answer2) {
 		long id;
 		ContentValues values = new ContentValues();
 		values.put(FIELD_LANG_NAME, lang);
@@ -122,6 +128,8 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 		values.put(FIELD_QUESTION_NAME, question);
 		values.put(FIELD_ORIGINAL_NAME, original);
         values.put(FIELD_ANSWER_NAME, answer);
+        values.put(FIELD_SERUID_NAME, ser_uid);
+        values.put(FIELD_ANSWER2_NAME, answer2);
         id  = mDb.replace(TABLE_NAME, null, values);
 		return id;
 	}
@@ -132,7 +140,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replaceItem(Questions question) {
-		return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer());
+		return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer(), question.getServer_uid(),question.getAnswer2());
 	}
     /**
      * <p>Иизменяет запись в таблице users</p>
@@ -140,7 +148,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Questions question) {
-        return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer());
+        return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer(), question.getServer_uid(),question.getAnswer2());
     }
 
 }
