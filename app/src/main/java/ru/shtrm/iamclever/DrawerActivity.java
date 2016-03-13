@@ -7,9 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.PowerManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -67,7 +69,7 @@ public class DrawerActivity extends AppCompatActivity {
     private Timer tShow = new Timer();
     private Timer tQuest = new Timer();
     private Timer tTips = new Timer();
-    private Handler handler = new Handler ();
+    private Handler handler = new Handler();
     ProgressDialog mProgressDialog;
 
     //save our header or result
@@ -76,9 +78,9 @@ public class DrawerActivity extends AppCompatActivity {
     private ArrayList<IProfile> iprofilelist;
     private List<Profiles> profilesList;
     private int cnt = 0;
-    private int period_quest=1200;
-    private int hour_start=0;
-    private int hour_end=23;
+    private int period_quest = 1200;
+    private int hour_start = 0;
+    private int hour_end = 23;
     private int users_id[];
 
     @Override
@@ -119,7 +121,7 @@ public class DrawerActivity extends AppCompatActivity {
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                         }
                         if (profile instanceof IDrawerItem && profile.getIdentifier() > PROFILE_SETTING) {
-                            int profileId = profile.getIdentifier()-3;
+                            int profileId = profile.getIdentifier() - 3;
                             ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
                                     new IDatabaseContext(getApplicationContext()));
                             headerResult.setActiveProfile(iprofilelist.get(profileId));
@@ -140,7 +142,7 @@ public class DrawerActivity extends AppCompatActivity {
             ActiveUserID = user.getId();
             isActive = user.getActive() > 0;
             if (user.getPeriod() > 0)
-                    period_quest = getResources().getIntArray(R.array.time_sec)[user.getPeriod()];
+                period_quest = getResources().getIntArray(R.array.time_sec)[user.getPeriod()];
             if (user.getStart() > 0)
                 hour_start = user.getStart();
             if (user.getEnd() > 0)
@@ -164,6 +166,10 @@ public class DrawerActivity extends AppCompatActivity {
                         new SecondarySwitchDrawerItem().withName("On-line профиль").withIcon(Octicons.Icon.oct_tools).withChecked(true).withOnCheckedChangeListener(onCheckedChangeListener).withIdentifier(11),
                         new SecondarySwitchDrawerItem().withName("Сделать паузу в обучении").withIcon(Octicons.Icon.oct_tools).withChecked(isActive).withOnCheckedChangeListener(onCheckedChangeListener).withIdentifier(12),
                         new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName("Новые слова").withDescription("Запомнить новые слова").withIcon(FontAwesome.Icon.faw_plus).withIdentifier(6).withSelectable(false),
+                        new PrimaryDrawerItem().withName("Проверить себя").withDescription("Проверить свои знания").withIcon(FontAwesome.Icon.faw_check).withIdentifier(7).withSelectable(false),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName("О программе").withDescription("Информация о версии").withIcon(FontAwesome.Icon.faw_info).withIdentifier(8).withSelectable(false),
                         new PrimaryDrawerItem().withName("Выход").withDescription("Закрыть программу").withIcon(FontAwesome.Icon.faw_undo).withIdentifier(14).withSelectable(false)
                 ) // add the items we want to use with our Drawer
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
@@ -193,7 +199,7 @@ public class DrawerActivity extends AppCompatActivity {
                                 mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
                                 mProgressDialog.setCancelable(true);
                                 // execute this when the downloader must be fired
-                                final DownloadTask downloadTask = new DownloadTask(getApplicationContext(),DrawerActivity.this);
+                                final DownloadTask downloadTask = new DownloadTask(getApplicationContext(), DrawerActivity.this);
                                 downloadTask.execute("http://shtrm.ru/genxml.php");
                                 mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                                     @Override
@@ -201,8 +207,16 @@ public class DrawerActivity extends AppCompatActivity {
                                         downloadTask.cancel(true);
                                     }
                                 });
-                            }
-                            else if (drawerItem.getIdentifier() == 14) {
+                            } else if (drawerItem.getIdentifier() == 6) {
+                                Fragment f = FragmentNewWords.newInstance("Learn words");
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                            } else if (drawerItem.getIdentifier() == 7) {
+                                Fragment f = FragmentQuestion.newInstance("Question");
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                            } else if (drawerItem.getIdentifier() == 8) {
+                                Fragment f = FragmentIntro.newInstance("Information");
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                            } else if (drawerItem.getIdentifier() == 14) {
                                 System.exit(0);
                             }
                             if (intent != null) {
@@ -227,10 +241,10 @@ public class DrawerActivity extends AppCompatActivity {
             result.setSelection(21, false);
 
             //set the active profile
-            if (iprofilelist.size()>0)   {
-                for (cnt=0;cnt< iprofilelist.size();cnt++) {
-                        if (ActiveUserID>0 && iprofilelist.get(cnt).getIdentifier()==ActiveUserID+2)
-                            headerResult.setActiveProfile(iprofilelist.get(cnt));
+            if (iprofilelist.size() > 0) {
+                for (cnt = 0; cnt < iprofilelist.size(); cnt++) {
+                    if (ActiveUserID > 0 && iprofilelist.get(cnt).getIdentifier() == ActiveUserID + 2)
+                        headerResult.setActiveProfile(iprofilelist.get(cnt));
                 }
             }
         }
@@ -238,27 +252,21 @@ public class DrawerActivity extends AppCompatActivity {
         Fragment f = FragmentIntro.newInstance("Demo");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
 
-        if (ActiveUserID>0) {
+        if (ActiveUserID > 0) {
             isLogged = true;
         } else {
             Toast.makeText(getApplicationContext(),
                     "Пожалуйста выберите профиль", Toast.LENGTH_LONG).show();
         }
 
-        tShow.schedule(new TimerTask(){
+        tShow.schedule(new TimerTask() {
             @Override
             public void run() {
                 if (isActive) {
-                    if (!isVisible) {
-                        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                        //TODO заменить getRunningTasks
-                        List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
-                        for (int i = 0; i < tasklist.size(); i++) {
-                            ActivityManager.RunningTaskInfo taskinfo = tasklist.get(i);
-                            if (taskinfo.topActivity.getPackageName().equals("ru.shtrm.iamclever"))
-                                am.moveTaskToFront(taskinfo.id, 0);
-                        }
-                    }
+                    PowerManager.WakeLock screenLock = ((PowerManager) getSystemService(POWER_SERVICE)).newWakeLock(
+                            PowerManager.PARTIAL_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, "TAG");
+                    screenLock.acquire();
+                    checkApplicationRunning();
                     handler.postDelayed(new Runnable() {
                         public void run() {
                             RunShow(0);
@@ -266,24 +274,16 @@ public class DrawerActivity extends AppCompatActivity {
                     }, 2000);
                 }
             }
-        },100*1000,period_quest*200);
+        }, 50 * 1000, period_quest * 200);
 
-        tQuest.schedule(new TimerTask(){
+        tQuest.schedule(new TimerTask() {
             @Override
-            public void run(){
+            public void run() {
                 if (isActive) {
-                    if (!isVisible) {
-                        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-                        List<ActivityManager.RunningTaskInfo> tasklist = am.getRunningTasks(10);
-                        for (int i = 0; i < tasklist.size(); i++) {
-                            ActivityManager.RunningTaskInfo taskinfo = tasklist.get(i);
-                            if (taskinfo.topActivity.getPackageName().equals("ru.shtrm.iamclever"))
-                                am.moveTaskToFront(taskinfo.id, 0);
-                        }
-                    }
+                    checkApplicationRunning();
                     Calendar cal = Calendar.getInstance();
                     int hour = cal.get(Calendar.HOUR);
-                    if (hour>=hour_start && hour<hour_end)
+                    if (hour >= hour_start && hour < hour_end)
                         handler.postDelayed(new Runnable() {
                             public void run() {
                                 RunShow(1);
@@ -291,11 +291,11 @@ public class DrawerActivity extends AppCompatActivity {
                         }, 2000);
                 }
             }
-        },150*1000,period_quest*1000/5);
+        }, 150 * 1000, period_quest * 1000 / 5);
 
-        tTips.schedule(new TimerTask(){
+        tTips.schedule(new TimerTask() {
             @Override
-            public void run(){
+            public void run() {
                 // check settings
                 ProfilesDBAdapter users = new ProfilesDBAdapter(
                         new IDatabaseContext(getApplicationContext()));
@@ -304,24 +304,24 @@ public class DrawerActivity extends AppCompatActivity {
                     if (user.getPeriod() >= 0)
                         period_quest = getResources().getIntArray(R.array.time_sec)[user.getPeriod()];
                     if (user.getStart() >= 0)
-                        hour_start=user.getStart();
+                        hour_start = user.getStart();
                     if (user.getEnd() >= 0)
-                        hour_end=user.getEnd();
+                        hour_end = user.getEnd();
                 }
                 if (isActive) {
-                    handler.postDelayed (new Runnable (){
-                        public void run (){
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
                             RunShow(2);
                         }
-                    },2000);
+                    }, 2000);
                 }
             }
-        },120000,180*1000);
+        }, 120000, 180 * 1000);
 
         isVisible = true;
     }
 
-    private void RunShow (int type) {
+    private void RunShow(int type) {
         if (isActive) {
             Fragment f;
             switch (type) {
@@ -332,12 +332,17 @@ public class DrawerActivity extends AppCompatActivity {
                     f = FragmentQuestion.newInstance("Question");
                     break;
                 case 2:
+                    android.app.Fragment mFragment = getFragmentManager().findFragmentByTag("0");
+                    if (mFragment != null && mFragment.isVisible()) return;
+                    mFragment = getFragmentManager().findFragmentByTag("1");
+                    if (mFragment != null && mFragment.isVisible()) return;
+
                     f = FragmentTips.newInstance();
                     break;
                 default:
                     f = FragmentIntro.newInstance("Welcome");
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f, type + "").commit();
         }
     }
 
@@ -352,11 +357,10 @@ public class DrawerActivity extends AppCompatActivity {
                     isActive = true;
                     user.setUserActive(1);
                     users.updateItem(user);
-                }
-                else
+                } else
                     isActive = false;
-                    user.setUserActive(0);
-                    users.updateItem(user);
+                user.setUserActive(0);
+                users.updateItem(user);
             }
         }
     };
@@ -364,7 +368,7 @@ public class DrawerActivity extends AppCompatActivity {
     private Drawer.OnDrawerItemClickListener onDrawerItemClickListener = new Drawer.OnDrawerItemClickListener() {
         @Override
         public boolean onItemClick(View view, int i, IDrawerItem iDrawerItem) {
-             return false;
+            return false;
         }
     };
 
@@ -392,37 +396,35 @@ public class DrawerActivity extends AppCompatActivity {
         }
     }
 
-    public void addProfile (Profiles item)
-        {
-            IProfile new_profile;
-            String target_filename = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getPackageName() + File.separator + "img" + File.separator + item.getImage();
-            File imgFile = new  File(target_filename);
-            if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                // first two elements reserved
-                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(myBitmap).withIdentifier(item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
-            }
-            else
-                new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.olejek).withIdentifier(item.getId()+2).withOnDrawerItemClickListener(onDrawerItemClickListener);
-            iprofilelist.add(new_profile);
-            headerResult.addProfile(new_profile, headerResult.getProfiles().size());
-        }
+    public void addProfile(Profiles item) {
+        IProfile new_profile;
+        String target_filename = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getPackageName() + File.separator + "img" + File.separator + item.getImage();
+        File imgFile = new File(target_filename);
+        if (imgFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            // first two elements reserved
+            new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(myBitmap).withIdentifier(item.getId() + 2).withOnDrawerItemClickListener(onDrawerItemClickListener);
+        } else
+            new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.olejek).withIdentifier(item.getId() + 2).withOnDrawerItemClickListener(onDrawerItemClickListener);
+        iprofilelist.add(new_profile);
+        headerResult.addProfile(new_profile, headerResult.getProfiles().size());
+    }
 
-    public void refreshProfileList () {
+    public void refreshProfileList() {
         ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
                 new IDatabaseContext(getApplicationContext()));
         profilesList = profileDBAdapter.getAllItems();
-        cnt=0;
+        cnt = 0;
         for (Profiles item : profilesList) {
-            users_id[cnt]=item.getId();
+            users_id[cnt] = item.getId();
             cnt = cnt + 1;
-            if (cnt>MAX_USER_PROFILE) break;
+            if (cnt > MAX_USER_PROFILE) break;
         }
     }
 
-    public void deleteProfile (int id)    {
-        for (cnt=0;cnt< iprofilelist.size();cnt++) {
-            if (users_id[cnt]==id) {
+    public void deleteProfile(int id) {
+        for (cnt = 0; cnt < iprofilelist.size(); cnt++) {
+            if (users_id[cnt] == id) {
                 iprofilelist.remove(cnt);
                 headerResult.removeProfile(cnt);
             }
@@ -430,17 +432,17 @@ public class DrawerActivity extends AppCompatActivity {
         refreshProfileList();
     }
 
-    public void fillProfileList ()    {
+    public void fillProfileList() {
         ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
                 new IDatabaseContext(getApplicationContext()));
         profilesList = profileDBAdapter.getAllItems();
 
-        cnt=0;
+        cnt = 0;
         for (Profiles item : profilesList) {
             addProfile(item);
-            users_id[cnt]=item.getId();
+            users_id[cnt] = item.getId();
             cnt = cnt + 1;
-            if (cnt>MAX_USER_PROFILE) break;
+            if (cnt > MAX_USER_PROFILE) break;
         }
     }
 
@@ -465,16 +467,45 @@ public class DrawerActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
-        isVisible=true;
+        isVisible = true;
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
-        isVisible=false;
+        isVisible = false;
+    }
+
+    public void checkApplicationRunning() {
+        if (!isVisible) {
+            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.KITKAT_WATCH) {
+                setActivePackages();
+            } else {
+                setActivePackagesCompat();
+            }
+        }
+    }
+
+    void setActivePackagesCompat() {
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> task_list = am.getRunningTasks(10);
+        for (int i = 0; i < task_list.size(); i++) {
+            ActivityManager.RunningTaskInfo task_info = task_list.get(i);
+            if (task_info.topActivity.getPackageName().equals(getApplicationInfo().packageName))
+                am.moveTaskToFront(task_info.id, 0);
+        }
+    }
+
+    void setActivePackages() {
+        ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        final List<ActivityManager.RunningAppProcessInfo> processInfos = am.getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo processInfo : processInfos) {
+            if (processInfo.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND) {
+                if (processInfo.pkgList[0].equals(getApplicationInfo().packageName))
+                    am.moveTaskToFront(processInfo.uid,0);
+            }
+        }
     }
 }

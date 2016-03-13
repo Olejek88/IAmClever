@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import ru.shtrm.iamclever.IDatabaseContext;
 import ru.shtrm.iamclever.R;
@@ -31,6 +32,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     private int cnt=0;
     private CheckBox new_word1,new_word2,new_word3,new_word4,new_word5;
     private Questions question;
+    private ArrayList<CheckBox> new_words = new ArrayList<>();
     private Stats stats;
     private ImageView iView;
     private TextView tView;
@@ -55,16 +57,16 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         iView = (ImageView) view.findViewById(R.id.lang_image);
         tView = (TextView) view.findViewById(R.id.new_words_text_hello);
 
-        new_word1 = (CheckBox)view.findViewById(R.id.new_word1);
-        new_word1.setOnClickListener(this);
-        new_word2 = (CheckBox)view.findViewById(R.id.new_word2);
-        new_word2.setOnClickListener(this);
-        new_word3 = (CheckBox)view.findViewById(R.id.new_word3);
-        new_word3.setOnClickListener(this);
-        new_word4 = (CheckBox)view.findViewById(R.id.new_word4);
-        new_word4.setOnClickListener(this);
-        new_word5 = (CheckBox)view.findViewById(R.id.new_word5);
-        new_word5.setOnClickListener(this);
+        new_words.add((CheckBox)view.findViewById(R.id.new_word1));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word2));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word3));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word4));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word5));
+        new_words.get(0).setOnClickListener(this);
+        new_words.get(1).setOnClickListener(this);
+        new_words.get(2).setOnClickListener(this);
+        new_words.get(3).setOnClickListener(this);
+        new_words.get(4).setOnClickListener(this);
 
         mNewWordsSubmit = (Button)view.findViewById(R.id.CheckNewWords);
         mNewWordsSubmit.setOnClickListener(this);
@@ -88,16 +90,15 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             }
             tView.setText(getString(R.string.new_words_hello)+ " Язык: " + languagesDBAdapter.getNameByID(""+user.getLang1()));
 
-            question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-            if (question != null) new_word1.setText(question.getOriginal() + " - " + question.getAnswer());
-            question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-            if (question != null) new_word2.setText(question.getOriginal() + " - " + question.getAnswer());
-            question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-            if (question != null) new_word3.setText(question.getOriginal() + " - " + question.getAnswer());
-            question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-            if (question != null) new_word4.setText(question.getOriginal() + " - " + question.getAnswer());
-            question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(),1);
-            if (question != null) new_word5.setText(question.getOriginal() + " - " + question.getAnswer());
+            for (int w_counter=0;w_counter<=4;w_counter++) {
+                question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
+                if (question != null) {
+                    if (question.getAnswer2().length()>0)
+                        new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer() + " / " + question.getAnswer2());
+                    else
+                        new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer());
+                    }
+                }
             }
         else
             {
@@ -113,7 +114,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             case R.id.new_word3:
             case R.id.new_word4:
             case R.id.new_word5:
-                if (new_word1.isChecked() && new_word2.isChecked() && new_word3.isChecked() && new_word4.isChecked() && new_word5.isChecked())
+                if (new_words.get(0).isChecked() && new_words.get(1).isChecked() && new_words.get(2).isChecked() && new_words.get(3).isChecked() && new_words.get(4).isChecked())
                     mNewWordsSubmit.setEnabled(true);
                 else
                     mNewWordsSubmit.setEnabled(false);

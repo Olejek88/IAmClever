@@ -23,6 +23,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:singleLine="true"
+            android:textSize="16sp"
+            android:paddingLeft="10sp"
             android:layout_toRightOf="@id/lang_image"
             android:text="@string/new_words_hello"/>
         </RelativeLayout>
@@ -31,9 +33,9 @@
         android:id="@+id/new_words_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_gravity="left"
         android:drawablePadding="5dp"
-        android:singleLine="true"
+        android:maxLines="2"
         android:text="@string/new_words"/>
 
     <CheckBox

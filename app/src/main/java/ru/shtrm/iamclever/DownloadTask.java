@@ -108,6 +108,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                               question.setLang(Integer.parseInt(word.getAttribute("lang")));
                               question.setType(Integer.parseInt(word.getAttribute("type")));
                               question.setLevel(Integer.parseInt(word.getAttribute("level")));
+                              question.setServer_uid(Integer.parseInt(word.getAttribute("id")));
+                              question.setAnswer2(word.getAttribute("translate2"));
                               switch (Integer.parseInt(word.getAttribute("lang")))
                                 {
                                     case 1: question.setLevelA1("A1"); break;
