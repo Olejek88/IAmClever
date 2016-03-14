@@ -47,6 +47,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         String RightAnswer;
         Questions question2;
+        // TODO экзамен состоит из n вопросов с выводом результата в конце
         View view = inflater.inflate(R.layout.dialog_question, container, false);
         TextView question_text = (TextView)view.findViewById(R.id.question_text);
         rb_question.add((RadioButton)view.findViewById(R.id.answer1));

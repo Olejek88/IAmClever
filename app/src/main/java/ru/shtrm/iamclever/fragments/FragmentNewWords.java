@@ -25,15 +25,11 @@ import ru.shtrm.iamclever.db.adapters.QuestionsDBAdapter;
 import ru.shtrm.iamclever.db.adapters.StatsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Profiles;
 import ru.shtrm.iamclever.db.tables.Questions;
-import ru.shtrm.iamclever.db.tables.Stats;
 
 public class FragmentNewWords extends Fragment implements View.OnClickListener {
-    private static final int MAX_WORDS = 3;
-    private int cnt=0;
-    private CheckBox new_word1,new_word2,new_word3,new_word4,new_word5;
+    private static final int MAX_WORDS = 10;
     private Questions question;
     private ArrayList<CheckBox> new_words = new ArrayList<>();
-    private Stats stats;
     private ImageView iView;
     private TextView tView;
     private Button mNewWordsSubmit;
@@ -62,11 +58,13 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         new_words.add((CheckBox)view.findViewById(R.id.new_word3));
         new_words.add((CheckBox)view.findViewById(R.id.new_word4));
         new_words.add((CheckBox)view.findViewById(R.id.new_word5));
-        new_words.get(0).setOnClickListener(this);
-        new_words.get(1).setOnClickListener(this);
-        new_words.get(2).setOnClickListener(this);
-        new_words.get(3).setOnClickListener(this);
-        new_words.get(4).setOnClickListener(this);
+        new_words.add((CheckBox)view.findViewById(R.id.new_word6));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word7));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word8));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word9));
+        new_words.add((CheckBox)view.findViewById(R.id.new_word10));
+        for (int i=0; i<MAX_WORDS; i++)
+            new_words.get(i).setOnClickListener(this);
 
         mNewWordsSubmit = (Button)view.findViewById(R.id.CheckNewWords);
         mNewWordsSubmit.setOnClickListener(this);
@@ -90,7 +88,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             }
             tView.setText(getString(R.string.new_words_hello)+ " Язык: " + languagesDBAdapter.getNameByID(""+user.getLang1()));
 
-            for (int w_counter=0;w_counter<=4;w_counter++) {
+            for (int w_counter=0;w_counter<=MAX_WORDS;w_counter++) {
                 question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
                 if (question != null) {
                     if (question.getAnswer2().length()>0)
@@ -101,10 +99,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                 }
             }
         else
-            {
-                Fragment f = FragmentWelcome.newInstance("");
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-            }
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
         return view;
     }
     public void onClick(View v) {
@@ -114,14 +109,18 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             case R.id.new_word3:
             case R.id.new_word4:
             case R.id.new_word5:
+            case R.id.new_word6:
+            case R.id.new_word7:
+            case R.id.new_word8:
+            case R.id.new_word9:
+            case R.id.new_word10:
                 if (new_words.get(0).isChecked() && new_words.get(1).isChecked() && new_words.get(2).isChecked() && new_words.get(3).isChecked() && new_words.get(4).isChecked())
                     mNewWordsSubmit.setEnabled(true);
                 else
                     mNewWordsSubmit.setEnabled(false);
                 break;
             case R.id.CheckNewWords: {
-                Fragment f = FragmentTips.newInstance();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentTips.newInstance()).commit();
                 break;
             }
         }
