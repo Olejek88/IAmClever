@@ -53,6 +53,27 @@
             android:textSize="14sp"
             android:textColor="@color/text_color"
             android:text="Answer5" />
+        <RadioButton
+            android:id="@+id/answer6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_color"
+            android:text="Answer6" />
+        <RadioButton
+            android:id="@+id/answer7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_color"
+            android:text="Answer7" />
+        <RadioButton
+            android:id="@+id/answer8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_color"
+            android:text="Answer8" />
     </RadioGroup>
 
     <RelativeLayout

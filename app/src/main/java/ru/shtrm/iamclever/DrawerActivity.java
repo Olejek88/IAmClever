@@ -62,6 +62,14 @@ public class DrawerActivity extends AppCompatActivity {
     private static final int PROFILE_SETTING = 2;
     private static final int MAX_USER_PROFILE = 10;
 
+    private static final int NO_FRAGMENT = 0;
+    private static final int FRAGMENT_LESSON = 1;
+    private static final int FRAGMENT_EXAM = 2;
+    private static final int FRAGMENT_WELCOME = 3;
+    private static final int FRAGMENT_TIPS = 4;
+    private static final int FRAGMENT_UPDATE = 5;
+    private static final int FRAGMENT_OTHER = 10;
+
     protected static boolean isVisible = false;
     private boolean isLogged = false;
     private boolean isActive = false;
@@ -74,6 +82,9 @@ public class DrawerActivity extends AppCompatActivity {
 
     //save our header or result
     public AccountHeader headerResult = null;
+
+    public int currentFragment = NO_FRAGMENT;
+
     private Drawer result = null;
     private ArrayList<IProfile> iprofilelist;
     private List<Profiles> profilesList;
@@ -112,14 +123,10 @@ public class DrawerActivity extends AppCompatActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_ADD) {
-                            Fragment f = FragmentAddUser.newInstance("AddProfile");
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-                        }
-                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING) {
-                            Fragment f = FragmentEditUser.newInstance("EditProfile");
-                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-                        }
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_ADD)
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentAddUser.newInstance("AddProfile")).commit();
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING)
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentEditUser.newInstance("EditProfile")).commit();
                         if (profile instanceof IDrawerItem && profile.getIdentifier() > PROFILE_SETTING) {
                             int profileId = profile.getIdentifier() - 3;
                             ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
@@ -161,7 +168,6 @@ public class DrawerActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName("Рейтинг").withDescription("Рейтинг среди изучающих").withIcon(FontAwesome.Icon.faw_bar_chart).withIdentifier(3).withSelectable(false),
                         new PrimaryDrawerItem().withName("Добавить слова").withDescription("Наполнить словарь").withIcon(FontAwesome.Icon.faw_briefcase).withIdentifier(4).withSelectable(false),
                         new PrimaryDrawerItem().withName("Обновить базу вопросов").withDescription("Загрузить с интернет-сервера").withIcon(FontAwesome.Icon.faw_download).withIdentifier(5).withSelectable(false),
-                        // TODO настройки связи с сервером
                         new DividerDrawerItem(),
                         new SecondarySwitchDrawerItem().withName("On-line профиль").withIcon(Octicons.Icon.oct_tools).withChecked(true).withOnCheckedChangeListener(onCheckedChangeListener).withIdentifier(11),
                         new SecondarySwitchDrawerItem().withName("Сделать паузу в обучении").withIcon(Octicons.Icon.oct_tools).withChecked(isActive).withOnCheckedChangeListener(onCheckedChangeListener).withIdentifier(12),
@@ -171,28 +177,23 @@ public class DrawerActivity extends AppCompatActivity {
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName("О программе").withDescription("Информация о версии").withIcon(FontAwesome.Icon.faw_info).withIdentifier(8).withSelectable(false),
                         new PrimaryDrawerItem().withName("Выход").withDescription("Закрыть программу").withIcon(FontAwesome.Icon.faw_undo).withIdentifier(14).withSelectable(false)
-                ) // add the items we want to use with our Drawer
+                )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        //check if the drawerItem is set.
-                        //there are different reasons for the drawerItem to be null
-                        //--> click on the header
-                        //--> click on the footer
-                        //those items don't contain a drawerItem
-
                         if (drawerItem != null) {
                             Intent intent = null;
                             if (drawerItem.getIdentifier() == 1) {
-                                Fragment f = FragmentSettings.newInstance();
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                                currentFragment=FRAGMENT_OTHER;
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentSettings.newInstance()).commit();
                             } else if (drawerItem.getIdentifier() == 2) {
-                                Fragment f = FragmentUser.newInstance("");
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                                currentFragment=FRAGMENT_OTHER;
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentUser.newInstance("")).commit();
                             } else if (drawerItem.getIdentifier() == 4) {
-                                Fragment f = FragmentAddWords.newInstance("Add new words");
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                                currentFragment=FRAGMENT_OTHER;
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentAddWords.newInstance("Add new words")).commit();
                             } else if (drawerItem.getIdentifier() == 5) {
+                                currentFragment=FRAGMENT_UPDATE;
                                 mProgressDialog = new ProgressDialog(DrawerActivity.this);
                                 mProgressDialog.setMessage("загружаем обновления");
                                 mProgressDialog.setIndeterminate(true);
@@ -208,14 +209,14 @@ public class DrawerActivity extends AppCompatActivity {
                                     }
                                 });
                             } else if (drawerItem.getIdentifier() == 6) {
-                                Fragment f = FragmentNewWords.newInstance("Learn words");
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                                currentFragment=FRAGMENT_LESSON;
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentNewWords.newInstance("Learn words")).commit();
                             } else if (drawerItem.getIdentifier() == 7) {
-                                Fragment f = FragmentQuestion.newInstance("Question");
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                                currentFragment=FRAGMENT_EXAM;
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentQuestion.newInstance("Question")).commit();
                             } else if (drawerItem.getIdentifier() == 8) {
-                                Fragment f = FragmentIntro.newInstance("Information");
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                                currentFragment=FRAGMENT_OTHER;
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentIntro.newInstance("Information")).commit();
                             } else if (drawerItem.getIdentifier() == 14) {
                                 System.exit(0);
                             }
@@ -291,7 +292,7 @@ public class DrawerActivity extends AppCompatActivity {
                         }, 2000);
                 }
             }
-        }, 150 * 1000, period_quest * 1000 / 5);
+        }, 100 * 1000, period_quest * 300);
 
         tTips.schedule(new TimerTask() {
             @Override
@@ -327,19 +328,23 @@ public class DrawerActivity extends AppCompatActivity {
             switch (type) {
                 case 0:
                     f = FragmentNewWords.newInstance("Lesson");
+                    currentFragment=FRAGMENT_LESSON;
                     break;
                 case 1:
                     f = FragmentQuestion.newInstance("Question");
+                    currentFragment=FRAGMENT_EXAM;
                     break;
                 case 2:
+                    // if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM)
                     android.app.Fragment mFragment = getFragmentManager().findFragmentByTag("0");
                     if (mFragment != null && mFragment.isVisible()) return;
                     mFragment = getFragmentManager().findFragmentByTag("1");
                     if (mFragment != null && mFragment.isVisible()) return;
-
+                    currentFragment=FRAGMENT_TIPS;
                     f = FragmentTips.newInstance();
                     break;
                 default:
+                    currentFragment=FRAGMENT_WELCOME;
                     f = FragmentIntro.newInstance("Welcome");
             }
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f, type + "").commit();
