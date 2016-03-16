@@ -80,7 +80,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 iView.setImageBitmap(myBitmap);
             }
-            tView.setText(getString(R.string.new_words_hello) + " Язык: " + languagesDBAdapter.getNameByID("" + user.getLang1()));
+            tView.setText("Язык: " + languagesDBAdapter.getNameByID("" + user.getLang1()));
 
             for (int w_counter=0;w_counter<MAX_WORDS;w_counter++) {
                 Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);

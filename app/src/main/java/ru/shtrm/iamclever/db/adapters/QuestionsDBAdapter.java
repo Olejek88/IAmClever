@@ -87,6 +87,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
         item.setAnswer(cursor.getString(cursor.getColumnIndex(FIELD_ANSWER_NAME)));
         item.setServer_uid(cursor.getInt(cursor.getColumnIndex(FIELD_SERUID_NAME)));
         item.setAnswer2(cursor.getString(cursor.getColumnIndex(FIELD_ANSWER2_NAME)));
+        cursor.close();
 		return item;
 	}
 

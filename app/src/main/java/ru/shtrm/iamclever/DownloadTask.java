@@ -59,7 +59,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
             // this will be useful to display download percentage
             // might be -1: server did not report the length
             int fileLength = connection.getContentLength();
-
+            publishProgress(10);
             input = connection.getInputStream();
             output = new FileOutputStream(target_filename);
 
@@ -78,6 +78,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                     publishProgress((int) (total * 100 / fileLength));
                 output.write(data, 0, count);
             }
+            publishProgress(20);
         } catch (Exception e) {
             return e.toString();
         } finally {
@@ -93,14 +94,19 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                      DocumentBuilder builder = factory.newDocumentBuilder();
                      Document doc = builder.parse(xml_file);
+                     publishProgress(30);
                      NodeList nodes = doc.getElementsByTagName("word");
                      for (int i = 0; i < nodes.getLength(); i++) {
                           Element word = (Element) nodes.item(i);
                           //temp = word.getNodeValue();
-                         temp = word.getFirstChild().getNodeValue();
+                          publishProgress(30 + i * 70 / nodes.getLength());
+                          temp = word.getFirstChild().getNodeValue();
                           if (temp!=null) {
                               question = questions.getQuestionByName(temp);
-                              if (question != null) continue;
+                              if (question != null) {
+
+                                  continue;
+                              }
                               question = new Questions();
                               question.setQuestion(0);
                               question.setOriginal(temp);
