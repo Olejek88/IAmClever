@@ -11,9 +11,10 @@
 
         <ImageView android:id="@+id/lang_image"
             android:layout_width="wrap_content"
-            android:layout_gravity="left"
-            android:gravity="left"
+            android:layout_gravity="start"
+            android:gravity="start"
             android:drawablePadding="5dp"
+            android:contentDescription="@string/image_description"
             android:layout_height="wrap_content"
             android:src="@drawable/eng" />
 
@@ -27,7 +28,7 @@
             android:paddingLeft="10sp"
             android:layout_toRightOf="@id/lang_image"
             android:text="@string/new_words_hello"/>
-        </RelativeLayout>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/new_words_text"

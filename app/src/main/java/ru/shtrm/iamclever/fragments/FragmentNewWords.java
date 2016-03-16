@@ -88,7 +88,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             }
             tView.setText(getString(R.string.new_words_hello)+ " Язык: " + languagesDBAdapter.getNameByID(""+user.getLang1()));
 
-            for (int w_counter=0;w_counter<=MAX_WORDS;w_counter++) {
+            for (int w_counter=0;w_counter<MAX_WORDS;w_counter++) {
                 question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
                 if (question != null) {
                     if (question.getAnswer2().length()>0)

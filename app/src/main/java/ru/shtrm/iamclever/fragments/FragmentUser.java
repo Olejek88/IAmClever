@@ -1,26 +1,20 @@
 package ru.shtrm.iamclever.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
-import android.graphics.Typeface;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.SeekBar;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import ru.shtrm.iamclever.IDatabaseContext;
@@ -31,12 +25,6 @@ import ru.shtrm.iamclever.db.tables.Profiles;
 import ru.shtrm.iamclever.db.tables.Stats;
 
 public class FragmentUser extends Fragment implements View.OnClickListener {
-    private static final int PICK_PHOTO_FOR_AVATAR = 1;
-    private ImageView iView;
-    protected BarChart mChart;
-    private SeekBar mSeekBarX, mSeekBarY;
-    private TextView tvX, tvY;
-    private Typeface mTf;
 
     public FragmentUser() {
         // Required empty public constructor
@@ -51,114 +39,89 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
-        ArrayList<Float> success = new ArrayList<Float>();
+        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        ArrayList<Float> success = new ArrayList<>();
 
         TextView name = (TextView) view.findViewById(R.id.settings_divider0);
-
         TextView question = (TextView) view.findViewById(R.id.profile_question);
-        TextView question_complete = (TextView) view.findViewById(R.id.profile_question_complete);
+        //TextView question_complete = (TextView) view.findViewById(R.id.profile_question_complete);
         TextView shows = (TextView) view.findViewById(R.id.profile_shows);
-        TextView shows_complete = (TextView) view.findViewById(R.id.profile_shows_complete);
+        //TextView shows_complete = (TextView) view.findViewById(R.id.profile_shows_complete);
 
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
-        ArrayList<String> xVals = new ArrayList<String>();
-        ArrayList<BarEntry> yVals = new ArrayList<BarEntry>();
 
         Profiles user = users.getActiveUser();
+
+        ArrayList<BarEntry> valueSet1 = new ArrayList<>();
+        ArrayList<BarEntry> valueSet2 = new ArrayList<>();
+
         if (user!=null) {
             name.setText(user.getName());
             Stats stat = statsDBAdapter.getStatsByProfileAndLang(user.getId(),user.getLang1());
             if (stat != null) {
-                question.setText(stat.getQuestions() + " (100%)");
                 if (stat.getQuestions()>0) {
-                    question_complete.setText(stat.getQuestions_right() + " (" + stat.getQuestions_right()*100/stat.getQuestions()  +  "%)");
+                    question.setText(stat.getQuestions_right() + "/" + stat.getQuestions() + " (" + stat.getQuestions_right()*100/stat.getQuestions() + "%)");
                     success.add((float) (stat.getQuestions_right()*100/stat.getQuestions()));
+                    BarEntry v1e1 = new BarEntry(stat.getQuestions(), 0);
+                    valueSet1.add(v1e1);
+                    BarEntry v2e1 = new BarEntry(stat.getQuestions_right(), 0);
+                    valueSet2.add(v2e1);
                 }
-                shows.setText(stat.getExams());
-                if (stat.getExams()>0) shows_complete.setText(stat.getExams_complete() + " (" + stat.getExams_complete()*100/stat.getExams()  +  "%)");
+                if (stat.getExams()>0) {
+                    BarEntry v1e2 = new BarEntry(stat.getExams(), 1);
+                    valueSet1.add(v1e2);
+                    BarEntry v2e2 = new BarEntry(stat.getExams_complete(), 1);
+                    valueSet2.add(v2e2);
+                    shows.setText(stat.getExams_complete() + "/" + stat.getExams() + " (" + stat.getExams_complete()*100/stat.getExams() + "%)");
+                }
             }
         }
-        tvX = (TextView) view.findViewById(R.id.tvXMax);
-        tvY = (TextView) view.findViewById(R.id.tvYMax);
 
-        mSeekBarX = (SeekBar) view.findViewById(R.id.seekBar1);
-        mSeekBarY = (SeekBar) view.findViewById(R.id.seekBar2);
+        ArrayList<BarDataSet> dataSets = null;
+        BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Exams");
+        barDataSet1.setColor(Color.rgb(0, 155, 0));
+        BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Questions");
+        barDataSet2.setColors(ColorTemplate.COLORFUL_COLORS);
 
-        mChart = (BarChart) view.findViewById(R.id.chart1);
-        //mChart.setOnChartValueSelectedListener(this);
+        ArrayList<String> labels = new ArrayList<>();
+        labels.add("Экзамены");
+        labels.add("Вопросы");
 
-        mChart.setDrawBarShadow(false);
-        mChart.setDrawValueAboveBar(true);
+        dataSets = new ArrayList<>();
+        dataSets.add(barDataSet1);
+        dataSets.add(barDataSet2);
 
-        mChart.setDescription("");
-        mChart.setMaxVisibleValueCount(60);
-        mChart.setPinchZoom(false);
-        mChart.setDrawGridBackground(false);
-        //mTf = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+        BarChart mChart = (BarChart) view.findViewById(R.id.chart1);
+        //BarData data = new BarData(labels, dataSets);
+        //mChart.setData(data);
 
-        XAxis xAxis = mChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTypeface(mTf);
-        xAxis.setDrawGridLines(false);
-        xAxis.setSpaceBetweenLabels(2);
+        //mChart.setDescription("Ваша статистика");
+        //mChart.animateXY(2000, 2000);
+        //mChart.invalidate();
 
-        //ValueFormatter custom = new MyValueFormatter();
+        ArrayList<String> xVals = new ArrayList<>();
+        ArrayList<BarEntry> entries = new ArrayList<>();
 
-        YAxis leftAxis = mChart.getAxisLeft();
-        leftAxis.setTypeface(mTf);
-        leftAxis.setLabelCount(8);
-        //leftAxis.setValueFormatter(custom);
-        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
-        leftAxis.setSpaceTop(15f);
+        int i = 0;
+        xVals.add("1");
+        xVals.add("2");
+        entries.add(new BarEntry(3f, i++));
+        entries.add(new BarEntry(5f, i++));
 
-        YAxis rightAxis = mChart.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setTypeface(mTf);
-        rightAxis.setLabelCount(8);
-        //rightAxis.setValueFormatter(custom);
-        rightAxis.setSpaceTop(15f);
+        BarDataSet barDataSet = new BarDataSet(entries, "");
+        barDataSet.setBarSpacePercent(30f);
+        barDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
 
-        Legend l = mChart.getLegend();
-        l.setPosition(Legend.LegendPosition.BELOW_CHART_LEFT);
-        l.setForm(Legend.LegendForm.SQUARE);
-        l.setFormSize(9f);
-        l.setTextSize(11f);
-        l.setXEntrySpace(4f);
-
-
-        //xVals.add("Вопросов");
-        //yVals1.add(new BarEntry(new float[] {
-//                val1, val2, val3
-  //      }, i));
-
-    //    xVals.add("Вопросов");
-
-        // setting data
-        mSeekBarY.setProgress(50);
-        mSeekBarX.setProgress(12);
-        //mSeekBarY.setOnSeekBarChangeListener(this);
-        //mSeekBarX.setOnSeekBarChangeListener(this);
+        BarData lineData = new BarData(xVals, barDataSet);
+        mChart.setData(lineData);
+        mChart.getBarData().setValueTextSize(13);
+        mChart.invalidate();
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_PHOTO_FOR_AVATAR && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                return;
-            }
-            try {
-                InputStream inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
-                iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override

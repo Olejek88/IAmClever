@@ -14,6 +14,7 @@
             android:id="@+id/settings_divider0"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textSize="16sp"
             android:height="30sp"
             android:padding="5dip"
             android:background="#FF4844"
@@ -23,84 +24,41 @@
         <Spinner
             android:id="@+id/profile_choose_lang"
             android:layout_height="wrap_content"
+            android:padding="5dip"
             android:entries="@array/languages_list"
             android:prompt="@string/add_word_lang"
             android:layout_width="match_parent"/>
 
         <TextView
-            android:id="@+id/profile_question"
+            android:id="@+id/profile_shows_complete"
             android:layout_width="match_parent"
+            android:padding="5dip"
             android:layout_height="wrap_content"
-            android:hint="@string/profile_questions1" />
-        <TextView
-            android:id="@+id/profile_question_complete"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/profile_questions_complete1" />
+            android:hint="@string/profile_shows_complete1" />
         <TextView
             android:id="@+id/profile_shows"
             android:layout_width="match_parent"
+            android:padding="5dip"
             android:layout_height="wrap_content"
             android:hint="@string/profile_shows1" />
+
         <TextView
-            android:id="@+id/profile_shows_complete"
+            android:id="@+id/profile_question_complete"
             android:layout_width="match_parent"
+            android:padding="5dip"
             android:layout_height="wrap_content"
-            android:hint="@string/profile_shows_complete1" />
+            android:hint="@string/profile_questions_complete1" />
+        <TextView
+            android:id="@+id/profile_question"
+            android:layout_width="match_parent"
+            android:padding="5dip"
+            android:layout_height="wrap_content"
+            android:hint="@string/profile_questions1" />
 
         <com.github.mikephil.charting.charts.BarChart
             android:id="@+id/chart1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/seekBar1" />
-
-        <SeekBar
-            android:id="@+id/seekBar2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="8dp"
-            android:layout_toLeftOf="@+id/tvYMax"
-            android:layout_marginRight="5dp"
-            android:max="200"
-            android:paddingBottom="12dp" />
-
-        <SeekBar
-            android:id="@+id/seekBar1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/seekBar2"
-            android:layout_margin="8dp"
-            android:layout_marginBottom="35dp"
-            android:layout_toLeftOf="@+id/tvXMax"
-            android:layout_marginRight="5dp"
-            android:max="1500"
-            android:paddingBottom="12dp" />
-
-        <TextView
-            android:id="@+id/tvXMax"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/seekBar1"
-            android:layout_alignParentRight="true"
-            android:text="500"
-            android:layout_marginBottom="15dp"
-            android:layout_marginRight="10dp"
-            android:gravity="right"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/tvYMax"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/seekBar2"
-            android:layout_alignParentRight="true"
-            android:text="500"
-            android:layout_marginBottom="15dp"
-            android:layout_marginRight="10dp"
-            android:gravity="right"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </ScrollView>

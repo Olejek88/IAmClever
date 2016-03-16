@@ -4,7 +4,7 @@
     <string name="welcome">Ваш профиль успешно создан/изменен. Теперь вы можете начать или продолжить обучение.</string>
     <string name="no_lang_selected">Не выбран доступный язык для обучения. Пожалуйста выберите язык в настройках программы.</string>
     <string name="next_lesson">Следующий урок через 30 минут</string>
-    <string name="new_words_hello">Новый урок!</string>
+    <string name="new_words_hello">Проверка знаний</string>
     <string name="new_words">Пожалуйста запомните новые слова и выражения.</string>
     <string name="image_description">Изображение</string>
     <string name="profile_add_name">Имя пользователя</string>

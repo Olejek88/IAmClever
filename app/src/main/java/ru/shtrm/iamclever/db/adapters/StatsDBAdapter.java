@@ -46,13 +46,14 @@ public class StatsDBAdapter extends BaseDBAdapter {
 			return getItem(cursor);
 		}
         else {
-            replaceItem(lang, profile, 0, 0, 0, 0, 0);
+            replaceItem(lang, profile, 0, 0, 0, 0, 0, true);
         }
 		return null;
 	}
 
     public Stats getItem(Cursor cursor) {
         Stats item = new Stats();
+        item.set_id(cursor.getInt(cursor.getColumnIndex(FIELD_ID_NAME)));
 		item.setLang(cursor.getInt(cursor.getColumnIndex(FIELD_LANG_NAME)));
         item.setProfile(cursor.getInt(cursor.getColumnIndex(FIELD_PROFILE_NAME)));
 		item.setDays(cursor.getInt(cursor.getColumnIndex(FIELD_DAYS_NAME)));
@@ -92,7 +93,7 @@ public class StatsDBAdapter extends BaseDBAdapter {
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 
-	public long replaceItem(int lang, int profile, int days, int exams, int exams_complete, int question, int question_right) {
+	public long replaceItem(int lang, int profile, int days, int exams, int exams_complete, int question, int question_right, boolean update) {
 		long id;
 		ContentValues values = new ContentValues();
 		values.put(FIELD_LANG_NAME, lang);
@@ -102,7 +103,10 @@ public class StatsDBAdapter extends BaseDBAdapter {
         values.put(FIELD_EXAMS_COMPLETE_NAME, exams_complete);
 		values.put(FIELD_QUESTION_NAME, question);
         values.put(FIELD_QUESTION_RIGHT_NAME, question_right);
-        id  = mDb.replace(TABLE_NAME, null, values);
+        if (update)
+            id = mDb.update(TABLE_NAME, values, FIELD_PROFILE_NAME + "=? AND " + FIELD_LANG_NAME + "=?", new String[] { String.valueOf(profile),String.valueOf(lang)});
+        else
+            id  = mDb.replace(TABLE_NAME, null, values);
 		return id;
 	}
 
@@ -118,7 +122,7 @@ public class StatsDBAdapter extends BaseDBAdapter {
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replaceItem(Stats stat) {
-		return replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right());
+		return replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right(),false);
 	}
     /**
      * <p>Иизменяет запись в таблице users</p>
@@ -126,7 +130,7 @@ public class StatsDBAdapter extends BaseDBAdapter {
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Stats stat) {
-        return replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right());
+        return replaceItem(stat.getLang(),stat.getProfile(),stat.getDays(),stat.getExams(),stat.getExams_complete(),stat.getQuestions(),stat.getQuestions_right(),true);
     }
 
 }

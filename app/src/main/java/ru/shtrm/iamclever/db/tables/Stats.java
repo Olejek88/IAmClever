@@ -53,7 +53,7 @@ public class Stats extends BaseTable {
     public int getQuestions_right() {
         return questions_right;
     }
-    public void setQuestions_right(int active) {
+    public void setQuestions_right(int questions_right) {
         this.questions_right = questions_right;
     }
 }

@@ -127,7 +127,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
      * <p>Добавляет/изменяет запись в таблице users</p>
      * @return long id столбца или -1 если не удалось добавить запись
      */
-    public long replaceItem(int profile, int level, int question, int correct, int incorrect, boolean update) {
+    public long replaceItem(int question, int profile, int level, int correct, int incorrect, boolean update) {
         long id;
         ContentValues values = new ContentValues();
         values.put(FIELD_QUESTION_NAME, question);
@@ -139,7 +139,6 @@ public class AnswersDBAdapter extends BaseDBAdapter {
             id = mDb.update(TABLE_NAME, values, FIELD_QUESTION_NAME + "=? AND " + FIELD_PROFILE_NAME + "=?", new String[] { String.valueOf(question), String.valueOf(profile)});
         else
             id  = mDb.replace(TABLE_NAME, null, values);
-
         return id;
     }
 

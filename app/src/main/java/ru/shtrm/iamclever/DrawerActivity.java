@@ -1,6 +1,7 @@
 package ru.shtrm.iamclever;
 
 import android.app.ActivityManager;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -110,7 +111,7 @@ public class DrawerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setBackgroundResource(R.drawable.header);
-        toolbar.setSubtitle("Level up you skills");
+        toolbar.setSubtitle("Level up your skills");
 
         // Create the AccountHeader
         headerResult = new AccountHeaderBuilder()
@@ -215,8 +216,17 @@ public class DrawerActivity extends AppCompatActivity {
                                 currentFragment=FRAGMENT_EXAM;
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentQuestion.newInstance("Question")).commit();
                             } else if (drawerItem.getIdentifier() == 8) {
-                                currentFragment=FRAGMENT_OTHER;
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentIntro.newInstance("Information")).commit();
+                                //currentFragment=FRAGMENT_OTHER;
+                                new AlertDialog.Builder(view.getContext())
+                                        .setTitle("Информация о программе")
+                                        .setMessage("I Am Clever v1.0.1\nOlejek(shtrm.ru) (c) 2016")
+                                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int which) {
+                                            }
+                                        })
+                                        .setIcon(android.R.drawable.ic_dialog_info)
+                                        .show();
+                                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentIntro.newInstance("Information")).commit();
                             } else if (drawerItem.getIdentifier() == 14) {
                                 System.exit(0);
                             }
@@ -327,21 +337,19 @@ public class DrawerActivity extends AppCompatActivity {
             Fragment f;
             switch (type) {
                 case 0:
+                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM) return;
                     f = FragmentNewWords.newInstance("Lesson");
                     currentFragment=FRAGMENT_LESSON;
                     break;
                 case 1:
+                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM) return;
                     f = FragmentQuestion.newInstance("Question");
                     currentFragment=FRAGMENT_EXAM;
                     break;
                 case 2:
-                    // if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM)
-                    android.app.Fragment mFragment = getFragmentManager().findFragmentByTag("0");
-                    if (mFragment != null && mFragment.isVisible()) return;
-                    mFragment = getFragmentManager().findFragmentByTag("1");
-                    if (mFragment != null && mFragment.isVisible()) return;
-                    currentFragment=FRAGMENT_TIPS;
+                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM) return;
                     f = FragmentTips.newInstance();
+                    currentFragment = FRAGMENT_TIPS;
                     break;
                 default:
                     currentFragment=FRAGMENT_WELCOME;
