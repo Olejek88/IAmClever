@@ -120,17 +120,13 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                                     case 6: question.setLevelA1("C2"); break;
                                     default: question.setLevelA1("A1"); break;
                                 }
-                              long id = questions.updateItem(question);
+                              questions.updateItem(question);
                             }
                         }
                     }
                 if (connection != null)
                     connection.disconnect();
-            } catch (ParserConfigurationException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (SAXException e) {
+            } catch (ParserConfigurationException | SAXException | IOException e) {
                 e.printStackTrace();
             }
         }

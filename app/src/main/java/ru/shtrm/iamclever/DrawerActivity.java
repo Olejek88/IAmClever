@@ -72,7 +72,7 @@ public class DrawerActivity extends AppCompatActivity {
     private static final int FRAGMENT_OTHER = 10;
 
     protected static boolean isVisible = false;
-    private boolean isLogged = false;
+    //private boolean isLogged = false;
     private boolean isActive = false;
     private int ActiveUserID;
     private Timer tShow = new Timer();
@@ -183,7 +183,7 @@ public class DrawerActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         if (drawerItem != null) {
-                            Intent intent = null;
+                            //Intent intent = null;
                             if (drawerItem.getIdentifier() == 1) {
                                 currentFragment=FRAGMENT_OTHER;
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentSettings.newInstance()).commit();
@@ -230,9 +230,9 @@ public class DrawerActivity extends AppCompatActivity {
                             } else if (drawerItem.getIdentifier() == 14) {
                                 System.exit(0);
                             }
-                            if (intent != null) {
-                                DrawerActivity.this.startActivity(intent);
-                            }
+                            //if (intent != null) {
+                                //DrawerActivity.this.startActivity(intent);
+                            //}
                         }
 
                         return false;
@@ -263,9 +263,7 @@ public class DrawerActivity extends AppCompatActivity {
         Fragment f = FragmentIntro.newInstance("Demo");
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
 
-        if (ActiveUserID > 0) {
-            isLogged = true;
-        } else {
+        if (ActiveUserID <= 0) {
             Toast.makeText(getApplicationContext(),
                     "Пожалуйста выберите профиль", Toast.LENGTH_LONG).show();
         }

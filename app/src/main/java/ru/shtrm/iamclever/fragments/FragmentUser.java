@@ -82,7 +82,7 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
             }
         }
 
-        ArrayList<BarDataSet> dataSets = null;
+        ArrayList<BarDataSet> dataSets;
         BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Exams");
         barDataSet1.setColor(Color.rgb(0, 155, 0));
         BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Questions");

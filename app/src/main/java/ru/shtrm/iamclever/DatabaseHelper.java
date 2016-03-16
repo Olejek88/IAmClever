@@ -37,14 +37,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(TAG, "onCreate: db.version=" + db.getVersion());
-		//loadAndExecSQLUpdate(db, 0, DATABASE_VERSION);
+		loadAndExecSQLUpdate(db, 0, DATABASE_VERSION);
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.d(TAG, "onUpgrade: db.version=" + db.getVersion());
 		Log.d(TAG, "onUpgrade: oldVersion=" + oldVersion + ", newVersion=" + newVersion);
-		//loadAndExecSQLUpdate(db, oldVersion, newVersion);
+		loadAndExecSQLUpdate(db, oldVersion, newVersion);
 	}
 	
 	/**

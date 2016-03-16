@@ -22,19 +22,15 @@ import ru.shtrm.iamclever.R;
 import ru.shtrm.iamclever.db.adapters.LanguagesDBAdapter;
 import ru.shtrm.iamclever.db.adapters.ProfilesDBAdapter;
 import ru.shtrm.iamclever.db.adapters.QuestionsDBAdapter;
-import ru.shtrm.iamclever.db.adapters.StatsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Profiles;
 import ru.shtrm.iamclever.db.tables.Questions;
 
 public class FragmentNewWords extends Fragment implements View.OnClickListener {
     private static final int MAX_WORDS = 10;
-    private Questions question;
+    private ArrayList<Questions> questions = new ArrayList<>();
     private ArrayList<CheckBox> new_words = new ArrayList<>();
-    private ImageView iView;
-    private TextView tView;
     private Button mNewWordsSubmit;
 
-    private StatsDBAdapter statsDBAdapter;
 
     public FragmentNewWords() {
         // Required empty public constructor
@@ -50,8 +46,8 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_new_words, container, false);
         File sd_card = Environment.getExternalStorageDirectory();
-        iView = (ImageView) view.findViewById(R.id.lang_image);
-        tView = (TextView) view.findViewById(R.id.new_words_text_hello);
+        ImageView iView = (ImageView) view.findViewById(R.id.lang_image);
+        TextView tView = (TextView) view.findViewById(R.id.new_words_text_hello);
 
         new_words.add((CheckBox)view.findViewById(R.id.new_word1));
         new_words.add((CheckBox)view.findViewById(R.id.new_word2));
@@ -76,8 +72,6 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         LanguagesDBAdapter languagesDBAdapter = new LanguagesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
-        statsDBAdapter = new StatsDBAdapter(
-                new IDatabaseContext(getActivity().getApplicationContext()));
 
         if (user.getLang1()>0) {
             String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + languagesDBAdapter.getIconByID(user.getLang1());
@@ -86,11 +80,12 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 iView.setImageBitmap(myBitmap);
             }
-            tView.setText(getString(R.string.new_words_hello)+ " Язык: " + languagesDBAdapter.getNameByID(""+user.getLang1()));
+            tView.setText(getString(R.string.new_words_hello) + " Язык: " + languagesDBAdapter.getNameByID("" + user.getLang1()));
 
             for (int w_counter=0;w_counter<MAX_WORDS;w_counter++) {
-                question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
+                Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
                 if (question != null) {
+                    questions.add(question);
                     if (question.getAnswer2().length()>0)
                         new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer() + " / " + question.getAnswer2());
                     else
@@ -103,6 +98,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         return view;
     }
     public void onClick(View v) {
+        int q;
         switch (v.getId()) {
             case R.id.new_word1:
             case R.id.new_word2:
@@ -120,6 +116,12 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                     mNewWordsSubmit.setEnabled(false);
                 break;
             case R.id.CheckNewWords: {
+                for (int i=0; i<MAX_WORDS; i++)
+                    if (new_words.get(0).isChecked()) {
+                        q=questions.get(i).getQuestion();
+                        q++;
+                        questions.get(i).setQuestion(q);
+                    }
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentTips.newInstance()).commit();
                 break;
             }

@@ -1,8 +1,5 @@
 package ru.shtrm.iamclever.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,11 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.Spinner;
 
-import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.util.ArrayList;
 
 import ru.shtrm.iamclever.IDatabaseContext;
@@ -25,13 +19,9 @@ import ru.shtrm.iamclever.db.adapters.ProfilesDBAdapter;
 import ru.shtrm.iamclever.db.tables.Profiles;
 
 public class FragmentSettings extends Fragment implements View.OnClickListener {
-    private static final int PICK_PHOTO_FOR_AVATAR = 1;
-    private InputStream inputStream;
     private Button one;
     private ArrayAdapter<String> langSpinnerAdapter;
-
     private CheckBox check;
-
     private ArrayList<CheckBox> checks;
 
     private Spinner lang1Spinner;
@@ -116,24 +106,6 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
 
         }
         return view;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_PHOTO_FOR_AVATAR && resultCode == Activity.RESULT_OK) {
-            if (data == null) {
-                //Display an error
-                return;
-            }
-            try {
-                ImageView iView = null;
-                inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
-                iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
     }
 
     @Override
