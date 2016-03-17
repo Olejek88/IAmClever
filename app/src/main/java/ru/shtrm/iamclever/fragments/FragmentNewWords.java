@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 import ru.shtrm.iamclever.IDatabaseContext;
 import ru.shtrm.iamclever.R;
@@ -45,9 +46,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_new_words, container, false);
-        File sd_card = Environment.getExternalStorageDirectory();
-        ImageView iView = (ImageView) view.findViewById(R.id.lang_image);
-        TextView tView = (TextView) view.findViewById(R.id.new_words_text_hello);
+        int n_lang=0;
 
         new_words.add((CheckBox)view.findViewById(R.id.new_word1));
         new_words.add((CheckBox)view.findViewById(R.id.new_word2));
@@ -67,35 +66,61 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
 
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
-        QuestionsDBAdapter questionDBAdapter = new QuestionsDBAdapter(
-                new IDatabaseContext(getActivity().getApplicationContext()));
-        LanguagesDBAdapter languagesDBAdapter = new LanguagesDBAdapter(
-                new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
 
-        if (user.getLang1()>0) {
-            String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + languagesDBAdapter.getIconByID(user.getLang1());
-            File imgFile = new  File(target_filename);
-            if(imgFile.exists()){
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                iView.setImageBitmap(myBitmap);
-            }
-            tView.setText("Язык: " + languagesDBAdapter.getNameByID("" + user.getLang1()));
+        if (user.getLang1()>0) n_lang++;
+        if (user.getLang2()>0) n_lang++;
+        if (user.getLang3()>0) n_lang++;
 
-            for (int w_counter=0;w_counter<MAX_WORDS;w_counter++) {
-                Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
-                if (question != null) {
-                    questions.add(question);
-                    if (question.getAnswer2().length()>0)
-                        new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer() + " / " + question.getAnswer2());
-                    else
-                        new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer());
-                    }
-                }
+        for (int t=0; t<20; t++) {
+            Random r = new Random();
+            int i1 = r.nextInt(3);
+            switch (i1) {
+                case 0:
+                    if (user.getLang1() > 0) FormWords(user.getLang1(),view);
+                    break;
+                case 1:
+                    if (user.getLang2() > 0) FormWords(user.getLang2(),view);
+                    break;
+                case 2:
+                    if (user.getLang3() > 0) FormWords(user.getLang3(),view);
+                    break;
             }
-        else
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
+        }
+
+        if (n_lang==0)
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
         return view;
+    }
+
+    public void FormWords(int lang, View view) {
+        File sd_card = Environment.getExternalStorageDirectory();
+        LanguagesDBAdapter languagesDBAdapter = new LanguagesDBAdapter(
+                new IDatabaseContext(getActivity().getApplicationContext()));
+        QuestionsDBAdapter questionDBAdapter = new QuestionsDBAdapter(
+                new IDatabaseContext(getActivity().getApplicationContext()));
+
+        ImageView iView = (ImageView) view.findViewById(R.id.lang_image);
+        TextView tView = (TextView) view.findViewById(R.id.new_words_text_hello);
+
+        String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + languagesDBAdapter.getIconByID(lang);
+        File imgFile = new File(target_filename);
+        if (imgFile.exists()) {
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            iView.setImageBitmap(myBitmap);
+        }
+        tView.setText("Язык: " + languagesDBAdapter.getNameByID("" + lang));
+
+        for (int w_counter = 0; w_counter < MAX_WORDS; w_counter++) {
+            Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, 1);
+            if (question != null) {
+                questions.add(question);
+                if (question.getAnswer2().length() > 0)
+                    new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer() + " / " + question.getAnswer2());
+                else
+                    new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer());
+            }
+        }
     }
     public void onClick(View v) {
         int q;

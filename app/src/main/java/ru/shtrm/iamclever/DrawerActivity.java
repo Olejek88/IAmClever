@@ -214,7 +214,7 @@ public class DrawerActivity extends AppCompatActivity {
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentNewWords.newInstance("Learn words")).commit();
                             } else if (drawerItem.getIdentifier() == 7) {
                                 currentFragment=FRAGMENT_EXAM;
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentQuestion.newInstance("Question")).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentQuestion.newInstance()).commit();
                             } else if (drawerItem.getIdentifier() == 8) {
                                 //currentFragment=FRAGMENT_OTHER;
                                 new AlertDialog.Builder(view.getContext())
@@ -341,7 +341,7 @@ public class DrawerActivity extends AppCompatActivity {
                     break;
                 case 1:
                     if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM) return;
-                    f = FragmentQuestion.newInstance("Question");
+                    f = FragmentQuestion.newInstance();
                     currentFragment=FRAGMENT_EXAM;
                     break;
                 case 2:

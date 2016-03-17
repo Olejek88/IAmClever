@@ -37,6 +37,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     private TextView question_text,count_timer;
     private Answers answer;
     private Stats stats;
+    private int CurrentLang;
     private CountDownTimer Count;
     private int n_quest = 1, questions=0, right_question=0, exam=0, exam_complete=0, answer_correct=0, answer_incorrect=0;
 
@@ -44,7 +45,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
         // Required empty public constructor
     }
 
-    public static FragmentQuestion newInstance(String title) {
+    public static FragmentQuestion newInstance() {
         //FragmentQuestion f = new FragmentQuestion();
         //Bundle args = new Bundle();
         return (new FragmentQuestion());
@@ -54,6 +55,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.dialog_question, container, false);
         count_timer = (TextView) view.findViewById(R.id.count_timer);
+        int n_lang=0;
 
         question_text = (TextView)view.findViewById(R.id.question_text);
         rb_question.add((RadioButton)view.findViewById(R.id.answer1));
@@ -73,24 +75,43 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
 
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
-        StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
-                new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
 
-        if (user.getLang1()>0) {
-            stats = statsDBAdapter.getStatsByProfileAndLang(user.getId(), user.getLang1());
-            if (stats!=null) {
-                exam = stats.getExams();
-                exam_complete = stats.getExams_complete();
-                questions = stats.getQuestions();
-                right_question = stats.getQuestions_right();
+        if (user.getLang1()>0) n_lang++;
+        if (user.getLang2()>0) n_lang++;
+        if (user.getLang3()>0) n_lang++;
+
+        for (int t=0; t<20; t++) {
+            Random r = new Random();
+            int i1 = r.nextInt(3);
+            switch (i1) {
+                case 0:
+                    if (user.getLang1() > 0) {
+                        CurrentLang=user.getLang1();
+                        SetQuestion(CurrentLang);
+                    }
+                    break;
+                case 1:
+                    if (user.getLang2() > 0) {
+                        CurrentLang=user.getLang2();
+                        SetQuestion(CurrentLang);
+                    }
+                    break;
+                case 2:
+                    if (user.getLang3() > 0) {
+                        CurrentLang=user.getLang3();
+                        SetQuestion(CurrentLang);
+                    }
+                    break;
             }
-            SetQuestion();
         }
+
+        if (n_lang==0)
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
         return view;
     }
 
-    public void SetQuestion()
+    public void SetQuestion(int lang)
         {
             String RightAnswer;
             Questions question2;
@@ -100,14 +121,24 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                     new IDatabaseContext(getActivity().getApplicationContext()));
             QuestionTypeDBAdapter questionTypeDBAdapter = new QuestionTypeDBAdapter(
                     new IDatabaseContext(getActivity().getApplicationContext()));
+            StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
+                    new IDatabaseContext(getActivity().getApplicationContext()));
             AnswersDBAdapter answersDBAdapter = new AnswersDBAdapter(
                     new IDatabaseContext(getActivity().getApplicationContext()));
             Profiles user = users.getActiveUser();
 
+            stats = statsDBAdapter.getStatsByProfileAndLang(user.getId(), lang);
+            if (stats!=null) {
+                exam = stats.getExams();
+                exam_complete = stats.getExams_complete();
+                questions = stats.getQuestions();
+                right_question = stats.getQuestions_right();
+            }
+
             for (int i=0; i<MAX_QUESTIONS; i++)
                 rb_question.get(i).setChecked(false);
 
-            question = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
+            question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, 1);
             if (question != null) {
                 RightAnswer = question.getAnswer();
                 answer = answersDBAdapter.getAnswerByQuestionAndProfile(question.getId(), user.getId());
@@ -121,7 +152,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 Random r = new Random();
                 int i1 = r.nextInt(MAX_QUESTIONS);
                 for (int i = 0; i < MAX_QUESTIONS; i++) {
-                    question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(user.getLang1(), 1);
+                    question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, 1);
                     if (i1 != i && question2 != null)
                         rb_question.get(i).setText(question2.getAnswer());
                     if (i1 == i) rb_question.get(i).setText(RightAnswer);
@@ -193,8 +224,8 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                                 }
                             }.start();
                         }
-                    n_quest++;
-                    SetQuestion();
+                     n_quest++;
+                     SetQuestion(CurrentLang);
                     }
                 else {
                     exam_complete++;

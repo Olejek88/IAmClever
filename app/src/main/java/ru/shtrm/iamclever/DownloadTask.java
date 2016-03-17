@@ -103,10 +103,8 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                           temp = word.getFirstChild().getNodeValue();
                           if (temp!=null) {
                               question = questions.getQuestionByName(temp);
-                              if (question != null) {
+                              if (question != null) continue;
 
-                                  continue;
-                              }
                               question = new Questions();
                               question.setQuestion(0);
                               question.setOriginal(temp);
