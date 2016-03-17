@@ -15,6 +15,9 @@
     <string name="profile_lang1">Язык 1</string>
     <string name="profile_lang2">Язык 2</string>
     <string name="profile_lang3">Язык 3</string>
+    <string name="profile_level1">Уровень владения</string>
+    <string name="profile_level2">Уровень владения</string>
+    <string name="profile_level3">Уровень владения</string>
     <string name="profile_days1">Дней обучения</string>
     <string name="profile_words_shown1">Слов показано</string>
     <string name="profile_phrases_shown1">Выражений показано</string>

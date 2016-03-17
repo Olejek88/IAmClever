@@ -27,6 +27,10 @@ public class Profiles extends BaseTable {
 
     private int user_active;
 
+    private int level1;
+    private int level2;
+    private int level3;
+
     public Profiles() {
 	}
 
@@ -143,4 +147,24 @@ public class Profiles extends BaseTable {
     public void setPeriod(int period) {
         this.period = period;
     }
+
+    public int getLevel1() {
+        return level1;
+    }
+    public void setLevel1(int level) {
+        this.level1 = level;
+    }
+    public int getLevel2() {
+        return level2;
+    }
+    public void setLevel2(int level) {
+        this.level2 = level;
+    }
+    public int getLevel3() {
+        return level3;
+    }
+    public void setLevel3(int level) {
+        this.level3 = level;
+    }
+
 }

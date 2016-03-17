@@ -28,6 +28,10 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
     private Spinner lang2Spinner;
     private Spinner lang3Spinner;
 
+    private Spinner level1Spinner;
+    private Spinner level2Spinner;
+    private Spinner level3Spinner;
+
     private Spinner startSpinner;
     private Spinner endSpinner;
     private Spinner periodSpinner;
@@ -50,6 +54,10 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
         lang1Spinner = (Spinner) view.findViewById(R.id.profile_add_lang1);
         lang2Spinner = (Spinner) view.findViewById(R.id.profile_add_lang2);
         lang3Spinner = (Spinner) view.findViewById(R.id.profile_add_lang3);
+
+        level1Spinner = (Spinner) view.findViewById(R.id.profile_level1);
+        level2Spinner = (Spinner) view.findViewById(R.id.profile_level2);
+        level3Spinner = (Spinner) view.findViewById(R.id.profile_level3);
 
         startSpinner = (Spinner) view.findViewById(R.id.profile_choose_time_start);
         endSpinner = (Spinner) view.findViewById(R.id.profile_choose_time_end);
@@ -91,6 +99,11 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
             lang1Spinner.setSelection(user.getLang1());
             lang2Spinner.setSelection(user.getLang2());
             lang3Spinner.setSelection(user.getLang3());
+
+            level1Spinner.setSelection(user.getLevel1());
+            level2Spinner.setSelection(user.getLevel2());
+            level3Spinner.setSelection(user.getLevel3());
+
             if (user.getActive()>0) check.setChecked(true);
             else check.setChecked(false);
             for (int wd=0; wd<7; wd++) {
@@ -120,6 +133,9 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
                     user.setLang1(lang1Spinner.getSelectedItemPosition());
                     user.setLang2(lang2Spinner.getSelectedItemPosition());
                     user.setLang3(lang3Spinner.getSelectedItemPosition());
+                    user.setLevel1(level1Spinner.getSelectedItemPosition());
+                    user.setLevel2(level2Spinner.getSelectedItemPosition());
+                    user.setLevel3(level3Spinner.getSelectedItemPosition());
                     user.setActive(check.isChecked() ? 1 : 0);
                     user.setCheck_weekday(1, checks.get(0).isChecked() ? 1 : 0);
                     user.setCheck_weekday(2, checks.get(1).isChecked() ? 1 : 0);

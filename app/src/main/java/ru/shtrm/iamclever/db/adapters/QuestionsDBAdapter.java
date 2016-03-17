@@ -40,9 +40,12 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 
 	public Questions getRandomQuestionByLangAndLevel(int lang, int level) {
 		Cursor cursor;
+        Questions question;
 		cursor = mDb.query(TABLE_NAME, mColumns, FIELD_LANG_NAME + "=? AND " + FIELD_LEVEL_NAME + "<=?", new String[]{""+lang, ""+level}, null, null, "RANDOM() LIMIT 1");
 		if (cursor.moveToFirst()) {
-			return getItem(cursor);
+            question = getItem(cursor);
+            cursor.close();
+			return question;
 		}
 
 		return null;

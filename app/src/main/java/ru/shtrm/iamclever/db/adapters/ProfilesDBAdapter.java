@@ -35,6 +35,9 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
     public static final String FIELD_PERIOD_NAME = "period";
 
     public static final String FIELD_ACTIVE_USER_NAME = "user_active";
+    public static final String FIELD_LEVEL1_NAME = "level1";
+    public static final String FIELD_LEVEL2_NAME = "level2";
+    public static final String FIELD_LEVEL3_NAME = "level3";
 
     String[] mColumns = {
 			FIELD_ID_NAME,
@@ -57,7 +60,10 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
             FIELD_HOUR_START_NAME,
             FIELD_HOUR_END_NAME,
             FIELD_PERIOD_NAME,
-            FIELD_ACTIVE_USER_NAME
+            FIELD_ACTIVE_USER_NAME,
+            FIELD_LEVEL1_NAME,
+            FIELD_LEVEL2_NAME,
+            FIELD_LEVEL3_NAME
     };
 
     public ProfilesDBAdapter(Context context) {
@@ -147,6 +153,9 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
         item.setStart(cursor.getInt(cursor.getColumnIndex(FIELD_HOUR_START_NAME)));
         item.setEnd(cursor.getInt(cursor.getColumnIndex(FIELD_HOUR_END_NAME)));
         item.setPeriod(cursor.getInt(cursor.getColumnIndex(FIELD_PERIOD_NAME)));
+        item.setLevel1(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL1_NAME)));
+        item.setLevel2(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL2_NAME)));
+        item.setLevel3(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL3_NAME)));
 		return item;
 	}
 
@@ -178,7 +187,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
 	 * <p>Добавляет/изменяет запись в таблице users</p>
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
-	public long replaceItem(String name, String image, String login, String pass, int lang1, int lang2, int lang3, int lastdate, int active, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday, int sunday, int start, int end, int period, boolean uprep) {
+	public long replaceItem(String name, String image, String login, String pass, int lang1, int lang2, int lang3, int lastdate, int active, int monday, int tuesday, int wednesday, int thursday, int friday, int saturday, int sunday, int start, int end, int period, boolean uprep, int level1, int level2, int level3) {
 		long id;
 		ContentValues values = new ContentValues();
 		values.put(FIELD_NAME_NAME, name);
@@ -200,6 +209,9 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
         values.put(FIELD_HOUR_START_NAME, start);
         values.put(FIELD_HOUR_END_NAME, end);
         values.put(FIELD_PERIOD_NAME, period);
+        values.put(FIELD_LEVEL1_NAME, level1);
+        values.put(FIELD_LEVEL2_NAME, level2);
+        values.put(FIELD_LEVEL3_NAME, level3);
 		if (uprep)
             id  = mDb.replace(TABLE_NAME, null, values);
         else
@@ -226,12 +238,15 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
      * <p>Добавляет/изменяет запись в таблице users</p>
      * @return long id столбца или -1 если не удалось добавить запись
      */
-    public long replaceItem(int lang1, int lang2, int lang3, int active, String login) {
+    public long replaceItem(int lang1, int lang2, int lang3, int active, String login,int level1, int level2, int level3) {
         ContentValues values = new ContentValues();
         values.put(FIELD_LANG1_NAME, lang1);
         values.put(FIELD_LANG2_NAME, lang2);
         values.put(FIELD_LANG3_NAME, lang3);
         values.put(FIELD_ACTIVE_NAME, active);
+        values.put(FIELD_LEVEL1_NAME, level1);
+        values.put(FIELD_LEVEL2_NAME, level2);
+        values.put(FIELD_LEVEL3_NAME, level3);
         return mDb.update(TABLE_NAME, values, FIELD_LOGIN_NAME + "=?", new String[] { String.valueOf(login) });
     }
 
@@ -241,7 +256,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replaceItem(Profiles user) {
-		return replaceItem(user.getName(), user.getImage(), user.getLogin(), user.getPass(), user.getLang1(), user.getLang2(), user.getLang3(), user.getLastDate(), user.getActive(), user.getCheck_weekday(1), user.getCheck_weekday(2), user.getCheck_weekday(3), user.getCheck_weekday(4), user.getCheck_weekday(5), user.getCheck_weekday(6), user.getCheck_weekday(7),user.getStart(), user.getEnd(), user.getPeriod(), true);
+		return replaceItem(user.getName(), user.getImage(), user.getLogin(), user.getPass(), user.getLang1(), user.getLang2(), user.getLang3(), user.getLastDate(), user.getActive(), user.getCheck_weekday(1), user.getCheck_weekday(2), user.getCheck_weekday(3), user.getCheck_weekday(4), user.getCheck_weekday(5), user.getCheck_weekday(6), user.getCheck_weekday(7),user.getStart(), user.getEnd(), user.getPeriod(), true, user.getLevel1(), user.getLevel2(), user.getLevel3());
 	}
     /**
      * <p>Иизменяет запись в таблице users</p>
@@ -249,7 +264,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Profiles user) {
-        return replaceItem(user.getName(), user.getImage(), user.getLogin(), user.getPass(), user.getLang1(), user.getLang2(), user.getLang3(), user.getLastDate(), user.getActive(), user.getCheck_weekday(1), user.getCheck_weekday(2), user.getCheck_weekday(3), user.getCheck_weekday(4), user.getCheck_weekday(5), user.getCheck_weekday(6), user.getCheck_weekday(7),user.getStart(), user.getEnd(), user.getPeriod(), false);
+        return replaceItem(user.getName(), user.getImage(), user.getLogin(), user.getPass(), user.getLang1(), user.getLang2(), user.getLang3(), user.getLastDate(), user.getActive(), user.getCheck_weekday(1), user.getCheck_weekday(2), user.getCheck_weekday(3), user.getCheck_weekday(4), user.getCheck_weekday(5), user.getCheck_weekday(6), user.getCheck_weekday(7),user.getStart(), user.getEnd(), user.getPeriod(), false, user.getLevel1(), user.getLevel2(), user.getLevel3());
     }
     /**
      * <p>Удаляет запись в таблице users</p>

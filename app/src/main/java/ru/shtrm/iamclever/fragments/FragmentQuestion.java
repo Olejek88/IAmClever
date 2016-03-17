@@ -39,7 +39,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     private Stats stats;
     private int CurrentLang;
     private CountDownTimer Count;
-    private int n_quest = 1, questions=0, right_question=0, exam=0, exam_complete=0, answer_correct=0, answer_incorrect=0;
+    private int n_quest = 1, questions=0, right_question=0, exam=0, exam_complete=0, answer_correct=0, answer_incorrect=0, r_question=0;
 
     public FragmentQuestion() {
         // Required empty public constructor
@@ -184,6 +184,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 if (right) {
                     answer_correct++;
                     right_question++;
+                    r_question++;
                     if (answer != null)
                         answer.setCorrect(answer_correct);
                     if (stats!=null)
@@ -209,7 +210,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
 
                             public void onFinish() {
                                 count_timer.setText("0");
-                                float pr = right_question * 100 / NUM_EXAM_QUESTIONS;
+                                float pr = r_question * 100 / NUM_EXAM_QUESTIONS;
                                 DecimalFormat twoDForm = new DecimalFormat("##.##");
                                 new AlertDialog.Builder(view.getContext())
                                         .setTitle("Время вышло! Результат")

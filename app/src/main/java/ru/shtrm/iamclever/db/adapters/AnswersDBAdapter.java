@@ -56,9 +56,11 @@ public class AnswersDBAdapter extends BaseDBAdapter {
             cursor = mDb.query(TABLE_NAME, mColumns, FIELD_QUESTION_NAME + "=? AND " + FIELD_PROFILE_NAME + "<=?", new String[]{""+question, ""+profile}, null, null, null);
         }
         if (cursor.getCount()>0) {
-            if (cursor.moveToFirst())
+            if (cursor.moveToFirst()) {
                 return getItem(cursor);
+            }
         }
+        cursor.close();
         return null;
     }
 
@@ -72,7 +74,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
         if (cursor.moveToFirst()) {
             return getItem(cursor);
         }
-
+        cursor.close();
         return null;
     }
 
@@ -86,6 +88,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
         if (cursor.moveToFirst()) {
             return getItem(cursor);
         }
+        cursor.close();
         return null;
     }
 

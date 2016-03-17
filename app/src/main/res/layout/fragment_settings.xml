@@ -25,10 +25,22 @@
             android:prompt="@string/profile_add_lang1"
             android:layout_width="match_parent"/>
         <Spinner
+            android:id="@+id/profile_level1"
+            android:layout_height="wrap_content"
+            android:entries="@array/levels"
+            android:prompt="@string/profile_level1"
+            android:layout_width="match_parent"/>
+        <Spinner
             android:id="@+id/profile_add_lang2"
             android:layout_height="wrap_content"
             android:entries="@array/languages_list"
             android:prompt="@string/profile_add_lang2"
+            android:layout_width="match_parent"/>
+        <Spinner
+            android:id="@+id/profile_level2"
+            android:layout_height="wrap_content"
+            android:entries="@array/levels"
+            android:prompt="@string/profile_level2"
             android:layout_width="match_parent"/>
         <Spinner
             android:id="@+id/profile_add_lang3"
@@ -36,6 +48,13 @@
             android:entries="@array/languages_list"
             android:prompt="@string/profile_add_lang3"
             android:layout_width="match_parent"/>
+        <Spinner
+            android:id="@+id/profile_level3"
+            android:layout_height="wrap_content"
+            android:entries="@array/levels"
+            android:prompt="@string/profile_level3"
+            android:layout_width="match_parent"/>
+
         <TextView
             android:id="@+id/settings_divider"
             android:layout_width="fill_parent"
