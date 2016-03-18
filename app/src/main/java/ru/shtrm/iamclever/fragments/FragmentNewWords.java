@@ -47,6 +47,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_new_words, container, false);
         int n_lang=0;
+        boolean form_complete=false;
 
         new_words.add((CheckBox)view.findViewById(R.id.new_word1));
         new_words.add((CheckBox)view.findViewById(R.id.new_word2));
@@ -77,15 +78,25 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             int i1 = r.nextInt(3);
             switch (i1) {
                 case 0:
-                    if (user.getLang1() > 0) FormWords(user.getLang1(),view);
+                    if (user.getLang1() > 0) {
+                        FormWords(user.getLang1(),view, user.getLevel1()+1);
+                        form_complete=true;
+                    }
                     break;
                 case 1:
-                    if (user.getLang2() > 0) FormWords(user.getLang2(),view);
+                    if (user.getLang2() > 0) {
+                        FormWords(user.getLang2(),view, user.getLevel2()+1);
+                        form_complete=true;
+                    }
                     break;
                 case 2:
-                    if (user.getLang3() > 0) FormWords(user.getLang3(),view);
+                    if (user.getLang3() > 0) {
+                        FormWords(user.getLang3(),view, user.getLevel3()+1);
+                        form_complete=true;
+                    }
                     break;
             }
+            if (form_complete) break;
         }
 
         if (n_lang==0)
@@ -93,7 +104,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    public void FormWords(int lang, View view) {
+    public void FormWords(int lang, View view,int level) {
         File sd_card = Environment.getExternalStorageDirectory();
         LanguagesDBAdapter languagesDBAdapter = new LanguagesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
@@ -112,7 +123,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         tView.setText("Язык: " + languagesDBAdapter.getNameByID("" + lang));
 
         for (int w_counter = 0; w_counter < MAX_WORDS; w_counter++) {
-            Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, 1);
+            Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, level);
             if (question != null) {
                 questions.add(question);
                 if (question.getAnswer2().length() > 0)
