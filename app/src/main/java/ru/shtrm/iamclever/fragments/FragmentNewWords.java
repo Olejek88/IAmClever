@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,7 +47,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.dialog_new_words, container, false);
-        int n_lang=0;
+        int n_lang=0,words=0;
         boolean form_complete=false;
 
         new_words.add((CheckBox)view.findViewById(R.id.new_word1));
@@ -68,6 +69,10 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
+        if (user==null) {
+            Toast.makeText(getActivity().getApplicationContext(), "Пользователь не выбран, пожалуйста выберите или содайте профиль", Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
+        }
 
         if (user.getLang1()>0) n_lang++;
         if (user.getLang2()>0) n_lang++;
@@ -79,19 +84,19 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             switch (i1) {
                 case 0:
                     if (user.getLang1() > 0) {
-                        FormWords(user.getLang1(),view, user.getLevel1()+1);
+                        words=FormWords(user.getLang1(),view, user.getLevel1()+1);
                         form_complete=true;
                     }
                     break;
                 case 1:
                     if (user.getLang2() > 0) {
-                        FormWords(user.getLang2(),view, user.getLevel2()+1);
+                        words=FormWords(user.getLang2(),view, user.getLevel2()+1);
                         form_complete=true;
                     }
                     break;
                 case 2:
                     if (user.getLang3() > 0) {
-                        FormWords(user.getLang3(),view, user.getLevel3()+1);
+                        words=FormWords(user.getLang3(),view, user.getLevel3()+1);
                         form_complete=true;
                     }
                     break;
@@ -99,12 +104,13 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             if (form_complete) break;
         }
 
-        if (n_lang==0)
+        if (n_lang==0 || words==0)
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
         return view;
     }
 
-    public void FormWords(int lang, View view,int level) {
+    public int FormWords(int lang, View view,int level) {
+        int words=0;
         File sd_card = Environment.getExternalStorageDirectory();
         LanguagesDBAdapter languagesDBAdapter = new LanguagesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
@@ -130,8 +136,10 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
                     new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer() + " / " + question.getAnswer2());
                 else
                     new_words.get(w_counter).setText(question.getOriginal() + " - " + question.getAnswer());
+                words++;
             }
         }
+        return words;
     }
     public void onClick(View v) {
         int q;

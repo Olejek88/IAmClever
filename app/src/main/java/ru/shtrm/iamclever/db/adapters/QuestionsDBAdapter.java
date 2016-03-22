@@ -47,7 +47,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
             cursor.close();
 			return question;
 		}
-
+        cursor.close();
 		return null;
 	}
 
@@ -61,7 +61,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 		if (cursor.moveToFirst()) {
 			return getItem(cursor);
 		}
-
+        cursor.close();
 		return null;
 	}
 
@@ -75,6 +75,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
         if (cursor.moveToFirst()) {
             return getItem(cursor);
         }
+        cursor.close();
         return null;
     }
 
@@ -114,6 +115,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
                     break;
                 cursor.moveToNext();
             }
+            cursor.close();
         }
         return arrayList;
     }
@@ -135,6 +137,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
         values.put(FIELD_SERUID_NAME, ser_uid);
         values.put(FIELD_ANSWER2_NAME, answer2);
         id  = mDb.replace(TABLE_NAME, null, values);
+        values.clear();
 		return id;
 	}
 

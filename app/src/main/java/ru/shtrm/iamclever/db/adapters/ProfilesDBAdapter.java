@@ -92,7 +92,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
 		if (cursor.moveToFirst()) {
 			return getItem(cursor);
 		}
-
+        cursor.close();
 		return null;
 	}
 
@@ -156,6 +156,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
         item.setLevel1(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL1_NAME)));
         item.setLevel2(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL2_NAME)));
         item.setLevel3(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL3_NAME)));
+        cursor.close();
 		return item;
 	}
 
@@ -180,6 +181,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
                 cursor.moveToNext();
             }
         }
+        cursor.close();
         return arrayList;
     }
 
@@ -216,6 +218,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
             id  = mDb.replace(TABLE_NAME, null, values);
         else
             id  = mDb.update(TABLE_NAME, values, FIELD_LOGIN_NAME + "=?", new String[] { String.valueOf(login) });
+        values.clear();
 		return id;
 	}
 

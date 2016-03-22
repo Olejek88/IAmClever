@@ -125,17 +125,27 @@ public class DrawerActivity extends AppCompatActivity {
                 .withOnAccountHeaderListener(new AccountHeader.OnAccountHeaderListener() {
                     @Override
                     public boolean onProfileChanged(View view, IProfile profile, boolean current) {
-                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_ADD)
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_ADD) {
+                            currentFragment=FRAGMENT_USER;
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentAddUser.newInstance("AddProfile")).commit();
-                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING)
+                        }
+                        if (profile instanceof IDrawerItem && profile.getIdentifier() == PROFILE_SETTING) {
+                            currentFragment=FRAGMENT_USER;
                             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentEditUser.newInstance("EditProfile")).commit();
+                        }
                         if (profile instanceof IDrawerItem && profile.getIdentifier() > PROFILE_SETTING) {
-                            int profileId = profile.getIdentifier() - 3;
+                            int profileId = profile.getIdentifier() - 2;
+                            int profile_pos=0;
+                            for (profile_pos = 0; profile_pos < iprofilelist.size(); profile_pos++)
+                                if (users_id[profile_pos] == profileId) break;
+
                             ProfilesDBAdapter profileDBAdapter = new ProfilesDBAdapter(
                                     new IDatabaseContext(getApplicationContext()));
-                            headerResult.setActiveProfile(iprofilelist.get(profileId));
-                            profileDBAdapter.setActiveUser(profilesList.get(profileId).getLogin());
-                            profilesList.get(profileId).setUserActive(1);
+                            headerResult.setActiveProfile(iprofilelist.get(profile_pos));
+                            profileDBAdapter.setActiveUser(profilesList.get(profile_pos).getLogin());
+                            profilesList.get(profile_pos).setUserActive(1);
+                            currentFragment=FRAGMENT_USER;
+                            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentSettings.newInstance()).commit();
                         }
                         //false if you have not consumed the event and it should close the drawer
                         return false;
@@ -417,7 +427,7 @@ public class DrawerActivity extends AppCompatActivity {
             // first two elements reserved
             new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(myBitmap).withIdentifier(item.getId() + 2).withOnDrawerItemClickListener(onDrawerItemClickListener);
         } else
-            new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.olejek).withIdentifier(item.getId() + 2).withOnDrawerItemClickListener(onDrawerItemClickListener);
+            new_profile = new ProfileDrawerItem().withName(item.getName()).withEmail(item.getLogin()).withIcon(R.drawable.profile_default_small).withIdentifier(item.getId() + 2).withOnDrawerItemClickListener(onDrawerItemClickListener);
         iprofilelist.add(new_profile);
         headerResult.addProfile(new_profile, headerResult.getProfiles().size());
     }
@@ -438,7 +448,8 @@ public class DrawerActivity extends AppCompatActivity {
         for (cnt = 0; cnt < iprofilelist.size(); cnt++) {
             if (users_id[cnt] == id) {
                 iprofilelist.remove(cnt);
-                headerResult.removeProfile(cnt);
+                //headerResult.removeProfile(cnt);
+                headerResult.removeProfileByIdentifier(users_id[cnt]+2);
             }
         }
         refreshProfileList();

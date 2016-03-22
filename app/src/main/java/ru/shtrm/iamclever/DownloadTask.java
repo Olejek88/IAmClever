@@ -101,6 +101,10 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                           //temp = word.getNodeValue();
                           publishProgress(30 + i * 70 / nodes.getLength());
                           temp = word.getFirstChild().getNodeValue();
+                          if (i%100==0)
+//                              Toast.makeText(context,""+i, Toast.LENGTH_SHORT).show();
+                                temp=temp;
+
                           if (temp!=null) {
                               question = questions.getQuestionByName(temp);
                               if (question != null) continue;

@@ -7,6 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.BarChart;
@@ -38,31 +40,43 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_profile, container, false);
+        final View view = inflater.inflate(R.layout.fragment_profile, container, false);
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        ArrayList<Float> success = new ArrayList<>();
-
-        TextView name = (TextView) view.findViewById(R.id.settings_divider0);
-        TextView question = (TextView) view.findViewById(R.id.profile_question);
-        //TextView question_complete = (TextView) view.findViewById(R.id.profile_question_complete);
-        TextView shows = (TextView) view.findViewById(R.id.profile_shows);
         //TextView shows_complete = (TextView) view.findViewById(R.id.profile_shows_complete);
+        final Spinner lang1Spinner = (Spinner) view.findViewById(R.id.profile_choose_lang);
+        lang1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+             setStatistics(lang1Spinner.getSelectedItemPosition()+2, view);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+            }
 
+        });
+        setStatistics(1, view);
+        return view;
+    }
+
+    public void setStatistics(int lang, View view) {
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
+        TextView name = (TextView) view.findViewById(R.id.settings_divider0);
+        TextView question = (TextView) view.findViewById(R.id.profile_question);
+        ArrayList<Float> success = new ArrayList<>();
+        TextView shows = (TextView) view.findViewById(R.id.profile_shows);
 
         Profiles user = users.getActiveUser();
-
         ArrayList<BarEntry> valueSet1 = new ArrayList<>();
         ArrayList<BarEntry> valueSet2 = new ArrayList<>();
 
         if (user!=null) {
             name.setText(user.getName());
-            Stats stat = statsDBAdapter.getStatsByProfileAndLang(user.getId(),user.getLang1());
+            Stats stat = statsDBAdapter.getStatsByProfileAndLang(user.getId(),lang);
             if (stat != null) {
                 if (stat.getQuestions()>0) {
                     question.setText(stat.getQuestions_right() + "/" + stat.getQuestions() + " (" + stat.getQuestions_right()*100/stat.getQuestions() + "%)");
@@ -121,7 +135,6 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
         mChart.setData(lineData);
         mChart.getBarData().setValueTextSize(13);
         mChart.invalidate();
-        return view;
     }
 
     @Override

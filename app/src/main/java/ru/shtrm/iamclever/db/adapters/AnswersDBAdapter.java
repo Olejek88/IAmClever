@@ -52,7 +52,7 @@ public class AnswersDBAdapter extends BaseDBAdapter {
         Cursor cursor;
         cursor = mDb.query(TABLE_NAME, mColumns, FIELD_QUESTION_NAME + "=? AND " + FIELD_PROFILE_NAME + "<=?", new String[]{""+question, ""+profile}, null, null, null);
         if (cursor.getCount()==0) {
-            replaceItem(profile, 1, question, 0, 0, false);
+            replaceItem(question, profile, 1,  0, 0, false);
             cursor = mDb.query(TABLE_NAME, mColumns, FIELD_QUESTION_NAME + "=? AND " + FIELD_PROFILE_NAME + "<=?", new String[]{""+question, ""+profile}, null, null, null);
         }
         if (cursor.getCount()>0) {

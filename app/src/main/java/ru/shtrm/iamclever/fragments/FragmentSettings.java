@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -94,6 +95,10 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
+        if (user==null) {
+            Toast.makeText(getActivity().getApplicationContext(), "Пользователь не выбран, пожалуйста выберите или содайте профиль", Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
+        }
 
         if (user!=null) {
             lang1Spinner.setSelection(user.getLang1());
@@ -148,10 +153,8 @@ public class FragmentSettings extends Fragment implements View.OnClickListener {
                     user.setStart(startSpinner.getSelectedItemPosition());
                     user.setPeriod(periodSpinner.getSelectedItemPosition());
                     Long id = users.updateItem(user);
-                    if (id > 0) {
-                        Fragment f = FragmentTips.newInstance();
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-                    }
+                    Fragment f = FragmentTips.newInstance();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 }
                 break;
             default:

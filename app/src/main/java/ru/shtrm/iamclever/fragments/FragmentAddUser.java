@@ -101,7 +101,14 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
             }
             try {
                 InputStream inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
-                iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+                Bitmap myBitmap = BitmapFactory.decodeStream(inputStream);
+                if (myBitmap!=null) {
+                    int height= (int) ((int)100*(float)((float)myBitmap.getHeight()/(float)myBitmap.getWidth()));
+                    if (height>0) {
+                        Bitmap myBitmap2 = Bitmap.createScaledBitmap(myBitmap, 100, height, false);
+                        iView.setImageBitmap(myBitmap2);
+                    }
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -180,7 +187,8 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
                     }
                 profile.setImage(image_name);
                 users.updateItem(profile);
-                if (id>0)
+                profile=users.getItem(login.getText().toString());
+                if (profile!=null)
                     {
                        ((DrawerActivity)getActivity()).addProfile(profile);
                         ((DrawerActivity)getActivity()).refreshProfileList();
@@ -198,16 +206,18 @@ public class FragmentAddUser extends Fragment implements View.OnClickListener {
     public void storeImage(String name) throws IOException {
         Bitmap bmp;
         File sdcard = Environment.getExternalStorageDirectory();
-        String targetfilename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + name;
-        File targetfile = new File (targetfilename);
-        if (!targetfile.getParentFile().exists()) {
-            targetfile.getParentFile().mkdirs();
+        String target_filename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + name;
+        File target_file = new File (target_filename);
+        if (!target_file.getParentFile().exists()) {
+            target_file.getParentFile().mkdirs();
         }
         iView.buildDrawingCache();
         bmp = iView.getDrawingCache();
-        FileOutputStream out = new FileOutputStream(targetfile);
-        Bitmap.createScaledBitmap(bmp, 100, 100, false);
-        bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        FileOutputStream out = new FileOutputStream(target_file);
+        if (bmp!=null) {
+            //Bitmap.createScaledBitmap(bmp, 100, 100, false);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        }
         out.flush();
         out.close();
 

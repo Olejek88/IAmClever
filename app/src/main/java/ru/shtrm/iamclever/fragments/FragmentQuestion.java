@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.File;
 import java.text.DecimalFormat;
@@ -61,6 +62,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.dialog_question, container, false);
+        int words=0;
         File sd_card = Environment.getExternalStorageDirectory();
         StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
@@ -90,7 +92,10 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
-
+        if (user==null) {
+            Toast.makeText(getActivity().getApplicationContext(), "Пользователь не выбран, пожалуйста выберите или содайте профиль", Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
+        }
         if (user.getLang1()>0) n_lang++;
         if (user.getLang2()>0) n_lang++;
         if (user.getLang3()>0) n_lang++;
@@ -104,7 +109,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                         CurrentLang=user.getLang1();
                         CurrentLevel=user.getLevel1()+1;
                         CurrentType=0;
-                        SetQuestion(CurrentLang,CurrentType,CurrentLevel);
+                        words=SetQuestion(CurrentLang,CurrentType,CurrentLevel);
                     }
                     break;
                 case 1:
@@ -112,7 +117,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                         CurrentLang=user.getLang2();
                         CurrentLevel=user.getLevel2()+1;
                         CurrentType=0;
-                        SetQuestion(CurrentLang,CurrentType,CurrentLevel);
+                        words=SetQuestion(CurrentLang,CurrentType,CurrentLevel);
                     }
                     break;
                 case 2:
@@ -120,7 +125,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                         CurrentLang=user.getLang3();
                         CurrentLevel=user.getLevel3()+1;
                         CurrentType=0;
-                        SetQuestion(CurrentLang,CurrentType,CurrentLevel);
+                        words=SetQuestion(CurrentLang,CurrentType,CurrentLevel);
                     }
                     break;
                 case 3:
@@ -128,7 +133,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                         CurrentLang=user.getLang1();
                         CurrentLevel=user.getLevel1()+1;
                         CurrentType=1;
-                        SetQuestion(CurrentLang,CurrentType,CurrentLevel);
+                        words=SetQuestion(CurrentLang,CurrentType,CurrentLevel);
                     }
                     break;
                 case 4:
@@ -136,7 +141,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                         CurrentLang=user.getLang2();
                         CurrentLevel=user.getLevel2()+1;
                         CurrentType=1;
-                        SetQuestion(CurrentLang,CurrentType,CurrentLevel+1);
+                        words=SetQuestion(CurrentLang,CurrentType,CurrentLevel+1);
                     }
                     break;
                 case 5:
@@ -144,7 +149,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                         CurrentLang=user.getLang3();
                         CurrentLevel=user.getLevel3()+1;
                         CurrentType=1;
-                        SetQuestion(CurrentLang,CurrentType,CurrentLevel);
+                        words=SetQuestion(CurrentLang,CurrentType,CurrentLevel);
                     }
                     break;
             }
@@ -169,14 +174,15 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
             }
         }
 
-        if (n_lang==0)
+        if (n_lang==0 || words==0)
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
         return view;
     }
 
-    public void SetQuestion(int lang, int type, int level)
+    public int SetQuestion(int lang, int type, int level)
         {
             String RightAnswer;
+            int words=0;
             Questions question2;
             ProfilesDBAdapter users = new ProfilesDBAdapter(
                     new IDatabaseContext(getActivity().getApplicationContext()));
@@ -215,11 +221,13 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                             rb_question.get(i).setText(question2.getAnswer());
                         else
                             rb_question.get(i).setText(question2.getOriginal());
+                        words++;
                     }
                     if (i1 == i) rb_question.get(i).setText(RightAnswer);
                 }
             } else
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("Welcome")).commit();
+            return words;
         }
 
     public void onClick(View v) {

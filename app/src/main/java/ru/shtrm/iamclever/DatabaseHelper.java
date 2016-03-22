@@ -17,9 +17,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static DatabaseHelper sInstance;
 	private static final String TAG = "DatabaseHelper";
 	private static Context sContext;
-	private String updatePath = "update_db";
+	private String updatePath = "updatedb";
 	private static final String DATABASE_NAME = "clever.db";
-	private static final int DATABASE_VERSION = 2;
+	private static final int DATABASE_VERSION = 1;
 
 	public static synchronized DatabaseHelper getInstance(Context context) {
 
@@ -64,7 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		db.beginTransaction();
 		for(int i = oldVersion + 1; i <= newVersion; i++){
 			try{
-				InputStream is = am.open(updatePath + "/update" + i + ".sql");
+				InputStream is = am.open("update" + i + ".sql");
 				BufferedReader br = new BufferedReader(new InputStreamReader(is));
 				String line;
 				while((line = br.readLine()) != null){
@@ -112,8 +112,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 * @return true если версии совпадают, false в противном случае
 	 */
 	public boolean isDBActual() {
-        sInstance.getReadableDatabase().getVersion();
-		return true;
+        return DATABASE_VERSION == sInstance.getReadableDatabase().getVersion();
+        //sInstance.getReadableDatabase().getVersion();
+		//return true;
 	}
 	
 	public int getVersion() {

@@ -61,6 +61,11 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         Profiles user = users.getActiveUser();
+        if (user==null) {
+            Toast.makeText(getActivity().getApplicationContext(), "Пользователь не выбран, пожалуйста выберите или содайте профиль", Toast.LENGTH_LONG).show();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
+        }
+
         if (user!=null) {
             pass.setText(user.getPass());
             login.setText(user.getLogin());
@@ -68,8 +73,8 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
             image_name = user.getImage();
 
             File sdcard = Environment.getExternalStorageDirectory();
-            String targetfilename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + user.getImage();
-            File imgFile = new  File(targetfilename);
+            String target_filename = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + user.getImage();
+            File imgFile = new  File(target_filename);
             if(imgFile.exists()){
                 Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 iView.setImageBitmap(myBitmap);
@@ -94,7 +99,14 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
             }
             try {
                 InputStream inputStream = getActivity().getApplicationContext().getContentResolver().openInputStream(data.getData());
-                iView.setImageBitmap(BitmapFactory.decodeStream(inputStream));
+                Bitmap myBitmap = BitmapFactory.decodeStream(inputStream);
+                if (myBitmap!=null) {
+                    int height = (int) ((int) 100 * (float) ((float) myBitmap.getHeight() / (float) myBitmap.getWidth()));
+                    if (height > 0) {
+                        Bitmap myBitmap2 = Bitmap.createScaledBitmap(myBitmap, 100, height, false);
+                        iView.setImageBitmap(myBitmap2);
+                    }
+                }
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -160,10 +172,12 @@ public class FragmentEditUser extends Fragment implements View.OnClickListener {
             target_file.getParentFile().mkdirs();
         }
         iView.buildDrawingCache();
-
         bmp = iView.getDrawingCache();
         FileOutputStream out = new FileOutputStream(target_file);
-        bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        if (bmp!=null) {
+            //Bitmap.createScaledBitmap(bmp, 100, 100, false);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        }
         out.flush();
         out.close();
     }
