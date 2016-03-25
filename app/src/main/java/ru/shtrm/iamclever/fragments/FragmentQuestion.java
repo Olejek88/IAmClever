@@ -48,6 +48,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
     private int CurrentType=99;
     private CountDownTimer Count;
     private int n_quest = 1, questions=0, right_question=0, exam=0, exam_complete=0, answer_correct=0, answer_incorrect=0, r_question=0;
+    private StatsDBAdapter statsDBAdapter;
 
     public FragmentQuestion() {
         // Required empty public constructor
@@ -64,7 +65,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
         final View view = inflater.inflate(R.layout.dialog_question, container, false);
         int words=0;
         File sd_card = Environment.getExternalStorageDirectory();
-        StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
+        statsDBAdapter = new StatsDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         LanguagesDBAdapter languagesDBAdapter = new LanguagesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
@@ -197,12 +198,14 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
             for (int i=0; i<MAX_QUESTIONS; i++)
                 rb_question.get(i).setChecked(false);
 
-            question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, level);
+            question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, level, 0);
+
             if (question != null) {
                 if (type==0)
                     RightAnswer = question.getAnswer();
                 else
                     RightAnswer = question.getOriginal();
+
                 answer = answersDBAdapter.getAnswerByQuestionAndProfile(question.getId(), user.getId());
                 if (answer!=null) {
                     answer_correct = answer.getCorrect();
@@ -215,7 +218,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 Random r = new Random();
                 int i1 = r.nextInt(MAX_QUESTIONS);
                 for (int i = 0; i < MAX_QUESTIONS; i++) {
-                    question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, 1);
+                    question2 = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, level, question.getType());
                     if (i1 != i && question2 != null) {
                         if (type==0)
                             rb_question.get(i).setText(question2.getAnswer());
@@ -242,10 +245,12 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
             case R.id.Question_Answer: {
                 AnswersDBAdapter answersDBAdapter = new AnswersDBAdapter(
                         new IDatabaseContext(getActivity().getApplicationContext()));
-                StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
+                QuestionsDBAdapter questionDBAdapter = new QuestionsDBAdapter(
                         new IDatabaseContext(getActivity().getApplicationContext()));
                 questions++;
                 boolean right=false;
+                int word=0;
+
                 for (int i=0; i<MAX_QUESTIONS; i++) {
                     if (CurrentType==0 && rb_question.get(i).isChecked() && rb_question.get(i).getText().equals(question.getAnswer()))
                         right = true;
@@ -256,6 +261,12 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                     answer_correct++;
                     right_question++;
                     r_question++;
+
+                    word=question.getQuestion();
+                    word++;
+                    question.setQuestion(word);
+                    questionDBAdapter.updateItem(question);
+
                     if (answer != null)
                         answer.setCorrect(answer_correct);
                     //Toast.makeText(getActivity().getApplicationContext(),"Правильно!", Toast.LENGTH_LONG).show();
@@ -279,6 +290,13 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
 
                             public void onFinish() {
                                 count_timer.setText("0");
+                                if (stats!=null) {
+                                    stats.setQuestions_right(right_question);
+                                    stats.setQuestions(questions);
+                                    stats.setExams(exam);
+                                    stats.setExams_complete(exam_complete);
+                                    statsDBAdapter.updateItem(stats);
+                                }
                                 float pr = r_question * 100 / NUM_EXAM_QUESTIONS;
                                 DecimalFormat twoDForm = new DecimalFormat("##.##");
                                 new AlertDialog.Builder(view.getContext())

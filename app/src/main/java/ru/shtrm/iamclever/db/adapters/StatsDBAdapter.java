@@ -46,7 +46,11 @@ public class StatsDBAdapter extends BaseDBAdapter {
 			return getItem(cursor);
 		}
         else {
-            replaceItem(lang, profile, 0, 0, 0, 0, 0, true);
+            replaceItem(lang, profile, 0, 0, 0, 0, 0, false);
+            cursor = mDb.query(TABLE_NAME, mColumns, FIELD_PROFILE_NAME + "=? AND " + FIELD_LANG_NAME + "=?", new String[]{""+profile,""+lang}, null, null, null);
+            if (cursor.moveToFirst()) {
+                return getItem(cursor);
+            }
         }
 		return null;
 	}

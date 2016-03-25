@@ -38,10 +38,13 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
         super(context, TABLE_NAME);
     }
 
-	public Questions getRandomQuestionByLangAndLevel(int lang, int level) {
+	public Questions getRandomQuestionByLangAndLevel(int lang, int level, int type) {
 		Cursor cursor;
         Questions question;
-		cursor = mDb.query(TABLE_NAME, mColumns, FIELD_LANG_NAME + "=? AND " + FIELD_LEVEL_NAME + "<=?", new String[]{""+lang, ""+level}, null, null, "RANDOM() LIMIT 1");
+        if (type==0)
+            cursor = mDb.query(TABLE_NAME, mColumns, FIELD_LANG_NAME + "=? AND " + FIELD_LEVEL_NAME + "<=?", new String[]{""+lang, ""+level}, null, null, "question,RANDOM() LIMIT 1");
+        else
+		    cursor = mDb.query(TABLE_NAME, mColumns, FIELD_LANG_NAME + "=? AND " + FIELD_LEVEL_NAME + "<=? AND " + FIELD_TYPE_NAME + "=?", new String[]{""+lang, ""+level, ""+type}, null, null, "question,RANDOM() LIMIT 1");
 		if (cursor.moveToFirst()) {
             question = getItem(cursor);
             cursor.close();
@@ -124,7 +127,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 	 * <p>Добавляет/изменяет запись в таблице users</p>
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
-	public long replaceItem(int lang, int type, int level, String levelA, int question, String original, String answer, int ser_uid, String answer2) {
+	public long replaceItem(int lang, int type, int level, String levelA, int question, String original, String answer, int ser_uid, String answer2, boolean update) {
 		long id;
 		ContentValues values = new ContentValues();
 		values.put(FIELD_LANG_NAME, lang);
@@ -136,7 +139,11 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
         values.put(FIELD_ANSWER_NAME, answer);
         values.put(FIELD_SERUID_NAME, ser_uid);
         values.put(FIELD_ANSWER2_NAME, answer2);
-        id  = mDb.replace(TABLE_NAME, null, values);
+        if (update)
+            id = mDb.update(TABLE_NAME, values, FIELD_ORIGINAL_NAME + "=? AND " + FIELD_LANG_NAME + "=?", new String[] { String.valueOf(original), String.valueOf(lang)});
+        else
+            id  = mDb.replace(TABLE_NAME, null, values);
+
         values.clear();
 		return id;
 	}
@@ -147,7 +154,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */
 	public long replaceItem(Questions question) {
-		return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer(), question.getServer_uid(),question.getAnswer2());
+		return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer(), question.getServer_uid(),question.getAnswer2(),false);
 	}
     /**
      * <p>Иизменяет запись в таблице users</p>
@@ -155,7 +162,7 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
      * @return long id столбца или -1 если не удалось добавить запись
      */
     public long updateItem(Questions question) {
-        return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer(), question.getServer_uid(),question.getAnswer2());
+        return replaceItem(question.getLang(),question.getType(),question.getLevel(),question.getLevelA1(),question.getQuestion(),question.getOriginal(),question.getAnswer(), question.getServer_uid(),question.getAnswer2(),true);
     }
 
 }

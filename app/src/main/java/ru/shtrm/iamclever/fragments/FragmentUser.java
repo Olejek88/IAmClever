@@ -27,6 +27,7 @@ import ru.shtrm.iamclever.db.tables.Profiles;
 import ru.shtrm.iamclever.db.tables.Stats;
 
 public class FragmentUser extends Fragment implements View.OnClickListener {
+    protected BarChart mChart;
 
     public FragmentUser() {
         // Required empty public constructor
@@ -49,7 +50,7 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
         lang1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-             setStatistics(lang1Spinner.getSelectedItemPosition()+2, view);
+             setStatistics(lang1Spinner.getSelectedItemPosition()+1, view);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parentView) {
@@ -61,6 +62,8 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
     }
 
     public void setStatistics(int lang, View view) {
+
+
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
         StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
@@ -96,44 +99,38 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
             }
         }
 
+        mChart = (BarChart) view.findViewById(R.id.chart1);
+
+        mChart.setDrawBarShadow(false);
+        mChart.setDrawValueAboveBar(true);
+
+        mChart.setDescription("");
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+        mChart.setDrawGridBackground(false);
+
         ArrayList<BarDataSet> dataSets;
-        BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Exams");
+        BarDataSet barDataSet1 = new BarDataSet(valueSet1, "Вопросы");
         barDataSet1.setColor(Color.rgb(0, 155, 0));
-        BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Questions");
+        BarDataSet barDataSet2 = new BarDataSet(valueSet2, "Экзамены");
         barDataSet2.setColors(ColorTemplate.COLORFUL_COLORS);
 
         ArrayList<String> labels = new ArrayList<>();
-        labels.add("Экзамены");
         labels.add("Вопросы");
+        labels.add("Экзамены");
 
         dataSets = new ArrayList<>();
         dataSets.add(barDataSet1);
         dataSets.add(barDataSet2);
 
         BarChart mChart = (BarChart) view.findViewById(R.id.chart1);
-        //BarData data = new BarData(labels, dataSets);
-        //mChart.setData(data);
+        BarData data = new BarData(labels, dataSets);
+        mChart.setData(data);
+        mChart.setBackgroundColor(0xffffffff);
 
         //mChart.setDescription("Ваша статистика");
         //mChart.animateXY(2000, 2000);
-        //mChart.invalidate();
-
-        ArrayList<String> xVals = new ArrayList<>();
-        ArrayList<BarEntry> entries = new ArrayList<>();
-
-        int i = 0;
-        xVals.add("1");
-        xVals.add("2");
-        entries.add(new BarEntry(3f, i++));
-        entries.add(new BarEntry(5f, i++));
-
-        BarDataSet barDataSet = new BarDataSet(entries, "");
-        barDataSet.setBarSpacePercent(30f);
-        barDataSet.setColors(ColorTemplate.JOYFUL_COLORS);
-
-        BarData lineData = new BarData(xVals, barDataSet);
-        mChart.setData(lineData);
-        mChart.getBarData().setValueTextSize(13);
         mChart.invalidate();
     }
 

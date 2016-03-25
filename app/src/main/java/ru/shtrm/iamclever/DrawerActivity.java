@@ -200,6 +200,7 @@ public class DrawerActivity extends AppCompatActivity {
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentSettings.newInstance()).commit();
                             } else if (drawerItem.getIdentifier() == 2) {
                                 currentFragment=FRAGMENT_OTHER;
+                                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, ChartsFragment.newInstance("")).commit();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentUser.newInstance("")).commit();
                             } else if (drawerItem.getIdentifier() == 4) {
                                 currentFragment=FRAGMENT_OTHER;

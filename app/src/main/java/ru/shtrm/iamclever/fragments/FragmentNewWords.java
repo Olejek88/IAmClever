@@ -129,7 +129,7 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         tView.setText("Язык: " + languagesDBAdapter.getNameByID("" + lang));
 
         for (int w_counter = 0; w_counter < MAX_WORDS; w_counter++) {
-            Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, level);
+            Questions question = questionDBAdapter.getRandomQuestionByLangAndLevel(lang, level,0);
             if (question != null) {
                 questions.add(question);
                 if (question.getAnswer2().length() > 0)
@@ -154,10 +154,8 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
             case R.id.new_word8:
             case R.id.new_word9:
             case R.id.new_word10:
-                if (new_words.get(0).isChecked() && new_words.get(1).isChecked() && new_words.get(2).isChecked() && new_words.get(3).isChecked() && new_words.get(4).isChecked())
-                    mNewWordsSubmit.setEnabled(true);
-                else
-                    mNewWordsSubmit.setEnabled(false);
+                //if (new_words.get(0).isChecked() && new_words.get(1).isChecked() && new_words.get(2).isChecked() && new_words.get(3).isChecked() && new_words.get(4).isChecked())
+                mNewWordsSubmit.setEnabled(true);
                 break;
             case R.id.CheckNewWords: {
                 for (int i=0; i<MAX_WORDS; i++)
