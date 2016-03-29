@@ -54,6 +54,7 @@ import ru.shtrm.iamclever.fragments.FragmentEditUser;
 import ru.shtrm.iamclever.fragments.FragmentIntro;
 import ru.shtrm.iamclever.fragments.FragmentNewWords;
 import ru.shtrm.iamclever.fragments.FragmentQuestion;
+import ru.shtrm.iamclever.fragments.FragmentRating;
 import ru.shtrm.iamclever.fragments.FragmentSettings;
 import ru.shtrm.iamclever.fragments.FragmentTips;
 import ru.shtrm.iamclever.fragments.FragmentUser;
@@ -70,6 +71,7 @@ public class DrawerActivity extends AppCompatActivity {
     private static final int FRAGMENT_TIPS = 4;
     private static final int FRAGMENT_UPDATE = 5;
     private static final int FRAGMENT_USER = 6;
+    private static final int FRAGMENT_RATING = 7;
     private static final int FRAGMENT_OTHER = 10;
 
     protected static boolean isVisible = false;
@@ -202,6 +204,26 @@ public class DrawerActivity extends AppCompatActivity {
                                 currentFragment=FRAGMENT_OTHER;
                                 //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, ChartsFragment.newInstance("")).commit();
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentUser.newInstance("")).commit();
+                            } else if (drawerItem.getIdentifier() == 3) {
+                                currentFragment = FRAGMENT_RATING;
+                                //getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, ChartsFragment.newInstance("")).commit();
+                                mProgressDialog = new ProgressDialog(DrawerActivity.this);
+                                mProgressDialog.setMessage("Синхронизируем пользователей");
+                                mProgressDialog.setIndeterminate(true);
+                                mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                                mProgressDialog.setCancelable(true);
+
+                                final SendProfileTask sendProfileTask = new SendProfileTask(getApplicationContext(), DrawerActivity.this);
+                                if (sendProfileTask!=null) {
+                                    sendProfileTask.execute();
+                                    mProgressDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                        @Override
+                                        public void onCancel(DialogInterface dialog) {
+                                            sendProfileTask.cancel(true);
+                                        }
+                                    });
+                                }
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentRating.newInstance()).commit();
                             } else if (drawerItem.getIdentifier() == 4) {
                                 currentFragment=FRAGMENT_OTHER;
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentAddWords.newInstance("Add new words")).commit();
@@ -500,6 +522,10 @@ public class DrawerActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         isVisible = false;
+    }
+
+    public DrawerActivity getDrawerActivity() {
+        return DrawerActivity.this;
     }
 
     public void checkApplicationRunning() {

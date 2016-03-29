@@ -21,9 +21,6 @@ import ru.shtrm.iamclever.db.adapters.QuestionsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Questions;
 
 public class FragmentAddWords extends Fragment implements View.OnClickListener {
-    private Button one;
-    private ArrayAdapter<String> langSpinnerAdapter;
-    private ArrayAdapter<String> typeSpinnerAdapter;
     private Spinner langSpinner;
     private Spinner levelSpinner;
     private Spinner typeSpinner;
@@ -42,18 +39,18 @@ public class FragmentAddWords extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_addwords, container, false);
-        one = (Button) view.findViewById(R.id.add_word_button_submit);
+        Button one = (Button) view.findViewById(R.id.add_word_button_submit);
         one.setOnClickListener(this);
 
         langSpinner = (Spinner) view.findViewById(R.id.add_word_lang);
         levelSpinner = (Spinner) view.findViewById(R.id.add_word_level);
         typeSpinner = (Spinner) view.findViewById(R.id.add_word_type);
 
-        langSpinnerAdapter = new ArrayAdapter<>(getContext(),
+        ArrayAdapter<String> langSpinnerAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 new ArrayList<String>());
         langSpinner.setAdapter(langSpinnerAdapter);
-        typeSpinnerAdapter = new ArrayAdapter<>(getContext(),
+        ArrayAdapter<String> typeSpinnerAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_dropdown_item,
                 new ArrayList<String>());
         typeSpinner.setAdapter(typeSpinnerAdapter);

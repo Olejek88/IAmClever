@@ -156,7 +156,6 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
         item.setLevel1(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL1_NAME)));
         item.setLevel2(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL2_NAME)));
         item.setLevel3(cursor.getInt(cursor.getColumnIndex(FIELD_LEVEL3_NAME)));
-        cursor.close();
 		return item;
 	}
 
@@ -174,8 +173,7 @@ public class ProfilesDBAdapter extends BaseDBAdapter {
         if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             while (true) {
-                Profiles profile = getItem(cursor);
-                arrayList.add(profile);
+                arrayList.add(getItem(cursor));
                 if (cursor.isLast())
                     break;
                 cursor.moveToNext();

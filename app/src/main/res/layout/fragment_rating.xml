@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rating_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/rating_intro"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:height="20sp"
+        android:text="@string/rating_intro"
+        android:textColor="@color/text_color" />
+
+    </LinearLayout>
