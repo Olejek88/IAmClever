@@ -75,7 +75,7 @@ public class DrawerActivity extends AppCompatActivity {
     private static final int FRAGMENT_OTHER = 10;
 
     protected static boolean isVisible = false;
-    //private boolean isLogged = false;
+    public boolean isOnline = true;
     private boolean isActive = false;
     private int ActiveUserID;
     private Timer tShow = new Timer();
@@ -397,6 +397,16 @@ public class DrawerActivity extends AppCompatActivity {
             ProfilesDBAdapter users = new ProfilesDBAdapter(
                     new IDatabaseContext(getApplicationContext()));
             Profiles user = users.getActiveUser();
+            if (drawerItem.getIdentifier() == 11) {
+                if (isChecked) {
+                    isOnline = true;
+                    user.setUserActive(1);
+                    users.updateItem(user);
+                } else
+                    isOnline = false;
+                user.setUserActive(0);
+                users.updateItem(user);
+            }
             if (drawerItem.getIdentifier() == 12) {
                 if (isChecked) {
                     isActive = true;

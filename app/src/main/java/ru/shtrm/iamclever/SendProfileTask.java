@@ -113,7 +113,7 @@ public class SendProfileTask extends AsyncTask<String, Integer, String> {
             result = "не получен ответ от сервера";
             publishProgress(50);
             postDataParams.clear();
-            postDataParams.put("profile", user.getId() + "");
+            postDataParams.put("profile", user.getLogin() + "");
             response = performPostCall("http://shtrm.ru/getusers.php", postDataParams);
             if (response.length() > 0) {
                 parseUsersRating(response);
@@ -134,7 +134,7 @@ public class SendProfileTask extends AsyncTask<String, Integer, String> {
     protected void parseUsersRating(String response) {
         RatingsDBAdapter ratings = new RatingsDBAdapter(
                 new IDatabaseContext(activity.getApplicationContext()));
-        String[] lines = response.split(System.getProperty("line.separator"));
+        String[] lines = response.split(";");
         ratings.deleteAllItem();
         if (lines!=null) {
             for (int line=0; line<lines.length; line++) {
@@ -142,8 +142,11 @@ public class SendProfileTask extends AsyncTask<String, Integer, String> {
                 //Олежек,155,1,65
                 //Лена,5,1,5
                 if (tList.get(0).length()>0 && tList.get(1).length()>0) {
-                    Float f=Float.parseFloat(tList.get(1));
-                    ratings.replaceItem(0, tList.get(0), line + 1, f, false);
+                    try {
+                        Float f=Float.parseFloat(tList.get(1));
+                        ratings.replaceItem(0, tList.get(0), line + 1, f, false);
+                    } catch (NumberFormatException e) {
+                    }
                 }
             }
         }

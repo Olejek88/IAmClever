@@ -2,5 +2,6 @@
 <resources>
     <color name="text_color">#EEEEEE</color>
     <color name="colorSecondary">#EEEEEE</color>
+    <color name="green">#00ff00</color>
     <color name="timer_color">#800000</color>
 </resources>

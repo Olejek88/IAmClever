@@ -9,7 +9,9 @@
         android:id="@+id/rating_intro"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:height="20sp"
+        android:height="30sp"
+        android:padding="5dip"
+        android:background="#FF4844"
         android:text="@string/rating_intro"
         android:textColor="@color/text_color" />
 

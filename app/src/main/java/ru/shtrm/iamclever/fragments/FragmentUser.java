@@ -89,6 +89,10 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
                     BarEntry v2e1 = new BarEntry(stat.getQuestions_right(), 0);
                     valueSet2.add(v2e1);
                 }
+                else {
+                    question.setText("нет данных");
+                    shows.setText("нет данных");
+                }
                 if (stat.getExams()>0) {
                     BarEntry v1e2 = new BarEntry(stat.getExams(), 1);
                     valueSet1.add(v1e2);
