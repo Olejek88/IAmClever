@@ -52,8 +52,10 @@ public class SendProfileTask extends AsyncTask<String, Integer, String> {
         int exams = 0,question=0,question_right=0;
         HttpURLConnection connection = null;
         HashMap<String, String> postDataParams = new HashMap<String, String>();
+
         File sd_card = Environment.getExternalStorageDirectory();
         target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + activity.getPackageName() + File.separator + "img" + File.separator;
+
         ProfilesDBAdapter users = new ProfilesDBAdapter(
                 new IDatabaseContext(activity.getApplicationContext()));
         statsDBAdapter = new StatsDBAdapter(

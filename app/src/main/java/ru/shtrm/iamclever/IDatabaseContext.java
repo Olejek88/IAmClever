@@ -98,24 +98,21 @@ public class IDatabaseContext extends ContextWrapper {
 	 */
 	@Override
 	public File getDatabasePath(String name) {
-		File sdcard = Environment.getExternalStorageDirectory();    
-		String dbfile = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getPackageName() + File.separator + "databases" + File.separator + databasePrefix + name;
-        //Toast toast = Toast.makeText(this, "База " + dbfile,
-        //        Toast.LENGTH_LONG);
-        //toast.show();
-        if (!dbfile.endsWith(".db")){
-		    dbfile += ".db" ;
-		}
-		
-		File result = new File(dbfile);
-		
-		if (!result.getParentFile().exists()) {
+        File sdcard = Environment.getExternalStorageDirectory();
+        String dbfile = sdcard.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getPackageName() + File.separator + "databases" + File.separator + databasePrefix + name;
+        if (!dbfile.endsWith(".db")) {
+            dbfile += ".db";
         }
-		
-		if (Log.isLoggable(TAG, Log.WARN)) {
-			Log.w(TAG, "getDatabasePath(" + name + ") = " + result.getAbsolutePath());
-		}
-		
-		return result;
-	}
+
+        File result = new File(dbfile);
+
+        if (!result.getParentFile().exists()) {
+            result.getParentFile().mkdirs();
+        }
+
+        if (Log.isLoggable(TAG, Log.WARN)) {
+            Log.w(TAG, "getDatabasePath(" + name + ") = " + result.getAbsolutePath());
+        }
+        return result;
+    }
 }

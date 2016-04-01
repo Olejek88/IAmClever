@@ -102,13 +102,14 @@ public class DrawerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample_dark_toolbar);
-        ProfilesDBAdapter users = new ProfilesDBAdapter(
-                new IDatabaseContext(getApplicationContext()));
 
         iprofilelist = new ArrayList<>();
         users_id = new int[MAX_USER_PROFILE];
 
         if (!initDB()) finish();
+
+        ProfilesDBAdapter users = new ProfilesDBAdapter(
+                new IDatabaseContext(getApplicationContext()));
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
