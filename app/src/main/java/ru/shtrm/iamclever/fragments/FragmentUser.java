@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import ru.shtrm.iamclever.IDatabaseContext;
 import ru.shtrm.iamclever.R;
 import ru.shtrm.iamclever.db.adapters.ProfilesDBAdapter;
+import ru.shtrm.iamclever.db.adapters.QuestionsDBAdapter;
 import ru.shtrm.iamclever.db.adapters.StatsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Profiles;
 import ru.shtrm.iamclever.db.tables.Stats;
@@ -68,10 +69,14 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
                 new IDatabaseContext(getActivity().getApplicationContext()));
         StatsDBAdapter statsDBAdapter = new StatsDBAdapter(
                 new IDatabaseContext(getActivity().getApplicationContext()));
+        QuestionsDBAdapter questionDBAdapter = new QuestionsDBAdapter(
+                new IDatabaseContext(getActivity().getApplicationContext()));
+
         TextView name = (TextView) view.findViewById(R.id.settings_divider0);
         TextView question = (TextView) view.findViewById(R.id.profile_question);
         ArrayList<Float> success = new ArrayList<>();
         TextView shows = (TextView) view.findViewById(R.id.profile_shows);
+        TextView question_total = (TextView) view.findViewById(R.id.profile_question_total);
 
         Profiles user = users.getActiveUser();
         ArrayList<BarEntry> valueSet1 = new ArrayList<>();
@@ -79,6 +84,7 @@ public class FragmentUser extends Fragment implements View.OnClickListener {
 
         if (user!=null) {
             name.setText(user.getName());
+            question_total.setText(""+questionDBAdapter.getItemsCount(lang));
             Stats stat = statsDBAdapter.getStatsByProfileAndLang(user.getId(),lang);
             if (stat != null) {
                 if (stat.getQuestions()>0) {

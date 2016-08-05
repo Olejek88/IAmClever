@@ -120,12 +120,23 @@ public class FragmentNewWords extends Fragment implements View.OnClickListener {
         ImageView iView = (ImageView) view.findViewById(R.id.lang_image);
         TextView tView = (TextView) view.findViewById(R.id.new_words_text_hello);
 
-        String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + languagesDBAdapter.getIconByID(lang);
+        Bitmap myBitmap;
+        switch (lang)
+        {
+            case 2: myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.ita); break;
+            case 3: myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.deu); break;
+            case 4: myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.usa); break;
+            default:
+                myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.eng);
+        }
+        iView.setImageBitmap(myBitmap);
+
+        /*String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + languagesDBAdapter.getIconByID(lang);
         File imgFile = new File(target_filename);
         if (imgFile.exists()) {
             Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
             iView.setImageBitmap(myBitmap);
-        }
+        }*/
         tView.setText("Язык: " + languagesDBAdapter.getNameByID("" + lang));
 
         for (int w_counter = 0; w_counter < MAX_WORDS; w_counter++) {

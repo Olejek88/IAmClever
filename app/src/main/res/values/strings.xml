@@ -56,6 +56,7 @@
     <string name="end">Конец:</string>
     <string name="period">Период</string>
     <string name="question_type_word">Переведите слово</string>
+    <string name="total_questions">Всего вопросов языка</string>
     <string name="question_type_expression">Выберите правильный перевод выражения</string>
     <string name="question_type_letter">Вставьте пропущенную букву</string>
     <string name="question_type">Тип вопроса</string>

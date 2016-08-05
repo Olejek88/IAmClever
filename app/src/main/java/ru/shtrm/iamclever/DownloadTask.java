@@ -128,7 +128,7 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
                                     case 6: question.setLevelA1("C2"); break;
                                     default: question.setLevelA1("A1"); break;
                                 }
-                              questions.updateItem(question);
+                              questions.replaceItem(question);
                             }
                         }
                     }

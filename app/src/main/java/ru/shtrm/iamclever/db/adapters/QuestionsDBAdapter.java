@@ -124,6 +124,19 @@ public class QuestionsDBAdapter extends BaseDBAdapter {
     }
 
     /**
+     * <p>
+     * Возвращает количество вопросов в таблице
+     * </p>
+     *
+     * @return count - возвращает количество вопросов
+     */
+    public long getItemsCount(int lang) {
+        Cursor cursor;
+        cursor = mDb.query(TABLE_NAME, mColumns, FIELD_LANG_NAME + "=?", new String[]{""+lang}, null, null, null);
+        return cursor.getCount();
+    }
+
+    /**
 	 * <p>Добавляет/изменяет запись в таблице users</p>
 	 * @return long id столбца или -1 если не удалось добавить запись
 	 */

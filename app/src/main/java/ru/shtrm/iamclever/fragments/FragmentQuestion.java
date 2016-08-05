@@ -97,9 +97,9 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
             Toast.makeText(getActivity().getApplicationContext(), "Пользователь не выбран, пожалуйста выберите или содайте профиль", Toast.LENGTH_LONG).show();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("")).commit();
         }
-        if (user.getLang1()>0) n_lang++;
-        if (user.getLang2()>0) n_lang++;
-        if (user.getLang3()>0) n_lang++;
+        if (user!=null && user.getLang1()>0) n_lang++;
+        if (user!=null && user.getLang2()>0) n_lang++;
+        if (user!=null && user.getLang3()>0) n_lang++;
 
         for (int t=0; t<20; t++) {
             Random r = new Random();
@@ -164,13 +164,23 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 }
             }
 
-            if (CurrentType!=99)    {
-                String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + languagesDBAdapter.getIconByID(CurrentLang);
-                File imgFile = new File(target_filename);
-                if (imgFile.exists()) {
-                    Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                    iView.setImageBitmap(myBitmap);
-                }
+            if (CurrentType!=99) {
+                Bitmap myBitmap;
+                switch (CurrentLang)
+                    {
+                        case 2: myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.ita); break;
+                        case 3: myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.deu); break;
+                        case 4: myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.usa); break;
+                        default:
+                            myBitmap = BitmapFactory.decodeResource(getActivity().getApplicationContext().getResources(), R.drawable.eng);
+                    }
+                iView.setImageBitmap(myBitmap);
+                //String target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + getActivity().getPackageName() + File.separator + "img" + File.separator + languagesDBAdapter.getIconByID(CurrentLang);
+                //File imgFile = new File(target_filename);
+                //if (imgFile.exists()) {
+                    //Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                    //iView.setImageBitmap(myBitmap);
+                //}
                 break;
             }
         }

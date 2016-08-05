@@ -61,4 +61,16 @@
             android:layout_height="wrap_content"
             android:hint="@string/profile_questions1" />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/profile_questions_text"
+        android:layout_width="match_parent"
+        android:padding="5dip"
+        android:layout_height="wrap_content"
+        android:hint="@string/total_questions" />
+    <TextView
+        android:id="@+id/profile_question_total"
+        android:layout_width="match_parent"
+        android:padding="5dip"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>
