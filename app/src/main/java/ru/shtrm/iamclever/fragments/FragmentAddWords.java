@@ -102,11 +102,11 @@ public class FragmentAddWords extends Fragment implements View.OnClickListener {
                 question.setLevel(levelSpinner.getSelectedItemPosition());
                 question.setLevelA1(levelSpinner.getSelectedItem().toString());
                 long id = questions.updateItem(question);
+                Fragment f = FragmentTips.newInstance();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 if (id>0)
-                    {
-                       Fragment f = FragmentTips.newInstance();
-                       getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-                    }
+                    Toast.makeText(getActivity().getApplicationContext(),
+                            "Слово успешно добавлено", Toast.LENGTH_LONG).show();
                 break;
             default:
                 break;

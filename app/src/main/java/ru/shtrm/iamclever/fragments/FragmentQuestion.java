@@ -267,6 +267,8 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                     if (CurrentType==1 && rb_question.get(i).isChecked() && rb_question.get(i).getText().equals(question.getOriginal()))
                         right = true;
                 }
+
+                Toast.makeText(getActivity().getApplicationContext(),"right="+right+" r_question"+r_question+" | "+right_question, Toast.LENGTH_LONG).show();
                 if (right) {
                     answer_correct++;
                     right_question++;

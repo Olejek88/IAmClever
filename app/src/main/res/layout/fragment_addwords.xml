@@ -60,16 +60,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/original"
-            android:gravity="start"
-            android:text="@string/original"/>
+            android:gravity="start" />
 
         <EditText
             android:id="@+id/add_word_answer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="start"
-            android:hint="@string/answer"
-            android:text="@string/answer"/>
+            android:hint="@string/answer" />
 
         <Button
             android:id="@+id/add_word_button_submit"

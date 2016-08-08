@@ -72,6 +72,7 @@ public class DrawerActivity extends AppCompatActivity {
     private static final int FRAGMENT_UPDATE = 5;
     private static final int FRAGMENT_USER = 6;
     private static final int FRAGMENT_RATING = 7;
+    private static final int FRAGMENT_ADDNEWWORDS = 8;
     private static final int FRAGMENT_OTHER = 10;
 
     protected static boolean isVisible = false;
@@ -226,7 +227,7 @@ public class DrawerActivity extends AppCompatActivity {
                                 }
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentRating.newInstance()).commit();
                             } else if (drawerItem.getIdentifier() == 4) {
-                                currentFragment=FRAGMENT_OTHER;
+                                currentFragment=FRAGMENT_ADDNEWWORDS;
                                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentAddWords.newInstance("Add new words")).commit();
                             } else if (drawerItem.getIdentifier() == 5) {
                                 currentFragment=FRAGMENT_UPDATE;
@@ -370,17 +371,17 @@ public class DrawerActivity extends AppCompatActivity {
             Fragment f;
             switch (type) {
                 case 0:
-                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM || currentFragment==FRAGMENT_USER) return;
+                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM || currentFragment==FRAGMENT_USER || currentFragment==FRAGMENT_ADDNEWWORDS) return;
                     f = FragmentNewWords.newInstance("Lesson");
                     currentFragment=FRAGMENT_LESSON;
                     break;
                 case 1:
-                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM || currentFragment==FRAGMENT_USER) return;
+                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM || currentFragment==FRAGMENT_USER || currentFragment==FRAGMENT_ADDNEWWORDS) return;
                     f = FragmentQuestion.newInstance();
                     currentFragment=FRAGMENT_EXAM;
                     break;
                 case 2:
-                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM || currentFragment==FRAGMENT_USER) return;
+                    if (currentFragment==FRAGMENT_LESSON || currentFragment==FRAGMENT_EXAM || currentFragment==FRAGMENT_USER || currentFragment==FRAGMENT_ADDNEWWORDS) return;
                     f = FragmentTips.newInstance();
                     currentFragment = FRAGMENT_TIPS;
                     break;
