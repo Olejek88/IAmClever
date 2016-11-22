@@ -192,7 +192,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
 
     public int SetQuestion(int lang, int type, int level)
         {
-            String RightAnswer;
+            String RightAnswer="";
             int words=0;
             Questions question2;
             ProfilesDBAdapter users = new ProfilesDBAdapter(
@@ -240,6 +240,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 }
             } else
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, FragmentWelcome.newInstance("Welcome")).commit();
+            //Toast.makeText(getActivity().getApplicationContext(), " = " + RightAnswer, Toast.LENGTH_LONG).show();
             return words;
         }
 
@@ -262,9 +263,9 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                 int word=0;
 
                 for (int i=0; i<MAX_QUESTIONS; i++) {
-                    if (CurrentType==0 && rb_question.get(i).isChecked() && rb_question.get(i).getText().equals(question.getAnswer()))
+                    if (CurrentType==0 && rb_question.get(i).isChecked() && (rb_question.get(i).getText().equals(question.getAnswer()) || rb_question.get(i).getText().equals(question.getOriginal())))
                         right = true;
-                    if (CurrentType==1 && rb_question.get(i).isChecked() && rb_question.get(i).getText().equals(question.getOriginal()))
+                    if (CurrentType==1 && rb_question.get(i).isChecked() && (rb_question.get(i).getText().equals(question.getOriginal()) || rb_question.get(i).getText().equals(question.getAnswer())  || rb_question.get(i).getText().equals(question.getAnswer2())))
                         right = true;
                 }
 

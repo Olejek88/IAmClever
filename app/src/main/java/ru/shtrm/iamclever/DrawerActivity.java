@@ -255,7 +255,7 @@ public class DrawerActivity extends AppCompatActivity {
                                 //currentFragment=FRAGMENT_OTHER;
                                 new AlertDialog.Builder(view.getContext())
                                         .setTitle("Информация о программе")
-                                        .setMessage("I Am Clever v1.0.1\nOlejek(shtrm.ru) (c) 2016")
+                                        .setMessage("I Am Clever v1.0.2\nOlejek(shtrm.ru) (c) 2016")
                                         .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int which) {
                                             }
