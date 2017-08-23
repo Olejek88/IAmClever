@@ -68,7 +68,7 @@ public class FragmentRating extends Fragment implements View.OnClickListener {
         for (int count=0; count<ratings.size(); count++) {
             TextView textView = new TextView(getActivity());
             textView.setText(ratings.get(count).getPlace()+". "+ratings.get(count).getUser()+" "+ratings.get(count).getRating());
-            textView.setHeight(30);
+            //textView.
             if (users.getActiveUser().getName().equals(ratings.get(count).getUser()))
                 textView.setBackgroundColor(Color.parseColor("#008000"));
             linearLayout.addView(textView);

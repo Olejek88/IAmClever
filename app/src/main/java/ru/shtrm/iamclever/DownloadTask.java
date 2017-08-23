@@ -26,6 +26,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import ru.shtrm.iamclever.db.adapters.QuestionsDBAdapter;
 import ru.shtrm.iamclever.db.tables.Questions;
 
+import java.io.File;
+
 public class DownloadTask extends AsyncTask<String, Integer, String> {
 
     private Context context;
@@ -43,8 +45,10 @@ public class DownloadTask extends AsyncTask<String, Integer, String> {
         OutputStream output = null;
         String target_filename;
         HttpURLConnection connection = null;
-        File sd_card = Environment.getExternalStorageDirectory();
-        target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + activity.getPackageName() + File.separator + "last.xml";
+        //File sd_card = Environment.getExternalStorageDirectory();
+        //String dbfile = getFilesDir() + File.separator + "databases" + File.separator + databasePrefix + name;
+        //target_filename = sd_card.getAbsolutePath() + File.separator + "Android" + File.separator + "data" + File.separator + activity.getPackageName() + File.separator + "last.xml";
+        target_filename = context.getFilesDir() + File.separator + "last.xml";
         File xml_file;
 
         try {

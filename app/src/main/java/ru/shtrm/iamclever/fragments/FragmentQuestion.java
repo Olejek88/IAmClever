@@ -269,7 +269,7 @@ public class FragmentQuestion extends Fragment implements View.OnClickListener {
                         right = true;
                 }
 
-                Toast.makeText(getActivity().getApplicationContext(),"right="+right+" r_question"+r_question+" | "+right_question, Toast.LENGTH_LONG).show();
+                // Toast.makeText(getActivity().getApplicationContext(),"right="+right+" r_question"+r_question+" | "+right_question, Toast.LENGTH_LONG).show();
                 if (right) {
                     answer_correct++;
                     right_question++;
