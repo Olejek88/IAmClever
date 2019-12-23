@@ -9,8 +9,8 @@
 - сравнение успеха пользователя в обучении с другими пользователями в виде таблицы результатов<br/>
 - вывод статистики обучения в виде графиков<br/>
 <br/><br/>
-<img src="images/1.jpg" alt="screen" width="300px" align="left" />
-<img src="images/2.jpg" alt="screen" width="300px" align="left" />
-<img src="images/3.jpg" alt="screen" width="300px" align="left" />
-<img src="images/4.jpg" alt="screen" width="300px" align="left" />
-<img src="images/5.jpg" alt="screen" width="300px" align="left" />
+<img src="images/1.jpg" alt="screen" width="250px" align="left" />
+<img src="images/2.jpg" alt="screen" width="250px" align="left" />
+<img src="images/3.jpg" alt="screen" width="250px" align="left" />
+<img src="images/4.jpg" alt="screen" width="250px" align="left" />
+<img src="images/5.jpg" alt="screen" width="250px" align="left" />
